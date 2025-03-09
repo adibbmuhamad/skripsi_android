@@ -28,10 +28,7 @@ import androidx.navigation.NavHostController
 import com.example.projectskripsi.R
 
 @Composable
-fun MainPage(
-    navController: NavController,
-    modifier: Modifier = Modifier
-) {
+fun MainPage(navController: NavController, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxSize()
@@ -47,19 +44,25 @@ fun MainPage(
             FeatureButton(
                 iconRes = R.drawable.ic_trophy,
                 label = "Achievements",
-                onClick = { /* TODO */ }
+                onClick = {
+                    navController.navigate("achievement_page")
+                }
             )
 
             FeatureButton(
                 iconRes = R.drawable.ic_megaphone,
                 label = "Announcements",
-                onClick = { /* TODO */ }
+                onClick = {
+                    navController.navigate("announcement_page")
+                }
             )
 
             FeatureButton(
                 iconRes = R.drawable.ic_user,
                 label = "Attendances",
-                onClick = { /* TODO */ }
+                onClick = {
+                    navController.navigate("attendance_page")
+                }
             )
         }
 
@@ -73,19 +76,25 @@ fun MainPage(
             FeatureButton(
                 iconRes = R.drawable.ic_heart,
                 label = "Health Reports",
-                onClick = { /* TODO */ }
+                onClick = {
+                    navController.navigate("health_report_page")
+                }
             )
 
             FeatureButton(
                 iconRes = R.drawable.ic_academic,
                 label = "Students",
-                onClick = { /* TODO */ }
+                onClick = {
+                    navController.navigate("student_page")
+                }
             )
 
             FeatureButton(
                 iconRes = R.drawable.ic_x_circle,
                 label = "Violations",
-                onClick = { /* TODO */ }
+                onClick = {
+                    navController.navigate("violation_page")
+                }
             )
         }
     }

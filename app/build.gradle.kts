@@ -88,5 +88,4 @@ dependencies {
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.24.13-rc")
 
     implementation("androidx.navigation:navigation-compose:2.8.4")
-
 }
