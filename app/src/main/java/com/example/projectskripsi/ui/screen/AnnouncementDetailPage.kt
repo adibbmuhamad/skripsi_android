@@ -31,7 +31,7 @@ fun AnnouncementDetailPage(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp, top = 50.dp)
+            .padding(16.dp, top = 32.dp)
     ) {
         if (isLoading.value) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))

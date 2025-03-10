@@ -1,6 +1,5 @@
 package com.example.projectskripsi.data.network
 
-import com.example.projectskripsi.data.model.Announcement
 import com.example.projectskripsi.data.model.AnnouncementDetailResponse
 import com.example.projectskripsi.data.model.AnnouncementResponse
 import retrofit2.Response
