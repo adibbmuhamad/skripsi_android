@@ -1,6 +1,7 @@
 package com.example.projectskripsi.data.repository
 
 import com.example.projectskripsi.data.model.Announcement
+import com.example.projectskripsi.data.model.AnnouncementDetailResponse
 import com.example.projectskripsi.data.model.AnnouncementResponse
 import com.example.projectskripsi.data.network.RetrofitClient
 import retrofit2.Response
@@ -13,7 +14,7 @@ class AnnouncementRepository {
     }
 
     // Mendapatkan detail pengumuman berdasarkan ID
-    suspend fun getAnnouncementDetail(id: Int): Response<Announcement> {
+    suspend fun getAnnouncementDetail(id: Int): Response<AnnouncementDetailResponse> {
         return RetrofitClient.apiService.getAnnouncementDetail(id)
     }
 }

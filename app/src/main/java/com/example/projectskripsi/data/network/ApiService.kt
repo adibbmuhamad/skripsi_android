@@ -1,6 +1,7 @@
 package com.example.projectskripsi.data.network
 
 import com.example.projectskripsi.data.model.Announcement
+import com.example.projectskripsi.data.model.AnnouncementDetailResponse
 import com.example.projectskripsi.data.model.AnnouncementResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -14,5 +15,5 @@ interface ApiService {
 
     // Mendapatkan detail pengumuman berdasarkan ID
     @GET("api/announcements/{id}")
-    suspend fun getAnnouncementDetail(@Path("id") id: Int): Response<Announcement>
+    suspend fun getAnnouncementDetail(@Path("id") id: Int): Response<AnnouncementDetailResponse>
 }

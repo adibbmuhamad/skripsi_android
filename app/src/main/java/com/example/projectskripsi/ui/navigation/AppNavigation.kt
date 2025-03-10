@@ -4,10 +4,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.projectskripsi.ui.screen.AchievementPage
+import com.example.projectskripsi.ui.screen.AnnouncementDetailPage
+import com.example.projectskripsi.ui.screen.AnnouncementDetailViewModel
 import com.example.projectskripsi.ui.screen.AnnouncementPage
 import com.example.projectskripsi.ui.screen.AnnouncementViewModel
 import com.example.projectskripsi.ui.screen.AttendancePage
@@ -63,6 +67,15 @@ fun AppNavigation(viewModel: AnnouncementViewModel) {
 
         composable("announcement_page"){
             AnnouncementPage(navController = navController, viewModel = viewModel, modifier = Modifier.fillMaxSize())
+        }
+
+        composable(
+            "announcement_detail/{announcementId}",
+            arguments = listOf(navArgument("announcementId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val announcementId = backStackEntry.arguments?.getInt("announcementId") ?: return@composable
+            val detailViewModel = AnnouncementDetailViewModel()
+            AnnouncementDetailPage(navController = navController, viewModel = detailViewModel, announcementId = announcementId)
         }
 
         composable("attendance_page"){
