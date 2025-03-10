@@ -1,9 +1,11 @@
 package com.example.projectskripsi.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -18,9 +20,9 @@ fun AnnouncementDetailPage(
     announcementId: Int,
     modifier: Modifier = Modifier
 ) {
-    val announcement = viewModel.selectedAnnouncement.value
-    val isLoading = viewModel.isLoading.value
-    val errorMessage = viewModel.errorMessage.value
+    val announcement = remember { viewModel.selectedAnnouncement }
+    val isLoading = remember { viewModel.isLoading }
+    val errorMessage = remember { viewModel.errorMessage }
 
     LaunchedEffect(announcementId) {
         viewModel.getAnnouncementDetail(announcementId)
@@ -31,12 +33,13 @@ fun AnnouncementDetailPage(
             .fillMaxSize()
             .padding(16.dp, top = 50.dp)
     ) {
-        if (isLoading) {
+        if (isLoading.value) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-        } else if (errorMessage.isNotEmpty()) {
-            Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
+        } else if (errorMessage.value.isNotEmpty()) {
+            Text(text = errorMessage.value, color = MaterialTheme.colorScheme.error)
         } else {
-            announcement?.let {
+            announcement.value?.let {
+                Log.d("AnnouncementDetailPage", "Displaying announcement: $it")
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -65,6 +68,7 @@ fun AnnouncementDetailPage(
                     }
                 }
             } ?: run {
+                Log.d("AnnouncementDetailPage", "Announcement not found")
                 Text(text = "Pengumuman tidak ditemukan", color = MaterialTheme.colorScheme.error)
             }
         }
@@ -74,5 +78,10 @@ fun AnnouncementDetailPage(
 @Preview(showBackground = true)
 @Composable
 private fun AnnouncementDetailPagePreview() {
-    AnnouncementDetailPage(navController = NavController(LocalContext.current), viewModel = AnnouncementDetailViewModel(), announcementId = 1)
+    // Preview untuk menampilkan tampilan composable di editor
+    AnnouncementDetailPage(
+        navController = NavController(LocalContext.current),
+        viewModel = AnnouncementDetailViewModel(),
+        announcementId = 1
+    )
 }

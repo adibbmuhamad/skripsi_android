@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.projectskripsi.data.model.Announcement
+import com.example.projectskripsi.data.model.AnnouncementDetail
 import com.example.projectskripsi.data.repository.AnnouncementRepository
 import kotlinx.coroutines.launch
 
@@ -12,11 +12,10 @@ class AnnouncementDetailViewModel : ViewModel() {
 
     private val repository = AnnouncementRepository()
 
-    var selectedAnnouncement = mutableStateOf<Announcement?>(null)
+    var selectedAnnouncement = mutableStateOf<AnnouncementDetail?>(null)
     var isLoading = mutableStateOf(false)
     var errorMessage = mutableStateOf("")
 
-    // Tag untuk logging
     private val TAG = "AnnouncementDetailVM"
 
     fun getAnnouncementDetail(id: Int) {
