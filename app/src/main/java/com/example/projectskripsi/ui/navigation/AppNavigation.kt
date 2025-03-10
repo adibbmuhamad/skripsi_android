@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.projectskripsi.ui.screen.AchievementPage
 import com.example.projectskripsi.ui.screen.AnnouncementPage
+import com.example.projectskripsi.ui.screen.AnnouncementViewModel
 import com.example.projectskripsi.ui.screen.AttendancePage
 import com.example.projectskripsi.ui.screen.HealthReportPage
 import com.example.projectskripsi.ui.screen.LoginPage
@@ -24,7 +25,7 @@ import com.example.projectskripsi.ui.screen.ViolationPage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppNavigation() {
+fun AppNavigation(viewModel: AnnouncementViewModel) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "main_page") {
@@ -61,7 +62,7 @@ fun AppNavigation() {
         }
 
         composable("announcement_page"){
-            AnnouncementPage(navController = navController, modifier = Modifier.fillMaxSize())
+            AnnouncementPage(navController = navController, viewModel = viewModel, modifier = Modifier.fillMaxSize())
         }
 
         composable("attendance_page"){
