@@ -23,16 +23,21 @@ import com.example.projectskripsi.ui.screen.OnBoarding2Page
 import com.example.projectskripsi.ui.screen.OnBoarding3Page
 import com.example.projectskripsi.ui.screen.ProfilePage
 import com.example.projectskripsi.ui.screen.SplashScreen
-import com.example.projectskripsi.ui.screen.StudentPage
+import com.example.projectskripsi.ui.screen.StudentDetailPage
+import com.example.projectskripsi.ui.screen.StudentListPage
+import com.example.projectskripsi.ui.screen.StudentViewModel
 import com.example.projectskripsi.ui.screen.ViolationPage
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppNavigation(viewModel: AnnouncementViewModel) {
+fun AppNavigation(
+    announcementViewModel: AnnouncementViewModel,
+    studentViewModel: StudentViewModel
+) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "main_page") {
+    NavHost(navController = navController, startDestination = "student_list") {
         composable("splash_screen") {
             SplashScreen(navController = navController)
         }
@@ -65,8 +70,8 @@ fun AppNavigation(viewModel: AnnouncementViewModel) {
             AchievementPage(navController = navController, modifier = Modifier.fillMaxSize())
         }
 
-        composable("announcement_page"){
-            AnnouncementPage(navController = navController, viewModel = viewModel, modifier = Modifier.fillMaxSize())
+        composable("announcement_page") {
+            AnnouncementPage(navController = navController, viewModel = announcementViewModel, modifier = Modifier.fillMaxSize())
         }
 
         composable(
@@ -86,8 +91,16 @@ fun AppNavigation(viewModel: AnnouncementViewModel) {
             HealthReportPage(navController = navController, modifier = Modifier.fillMaxSize())
         }
 
-        composable("student_page"){
-            StudentPage(navController = navController, modifier = Modifier.fillMaxSize())
+        composable("student_list") {
+            StudentListPage(navController = navController, viewModel = studentViewModel, modifier = Modifier.fillMaxSize())
+        }
+
+        composable(
+            "student_detail/{studentId}",
+            arguments = listOf(navArgument("studentId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val studentId = backStackEntry.arguments?.getInt("studentId") ?: return@composable
+            StudentDetailPage(navController = navController, viewModel = studentViewModel, studentId = studentId)
         }
 
         composable("violation_page"){

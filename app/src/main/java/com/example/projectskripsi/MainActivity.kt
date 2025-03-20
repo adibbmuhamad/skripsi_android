@@ -15,17 +15,22 @@ import androidx.navigation.compose.rememberNavController
 import com.example.projectskripsi.ui.navigation.AppNavigation
 import com.example.projectskripsi.ui.screen.AnnouncementPage
 import com.example.projectskripsi.ui.screen.AnnouncementViewModel
+import com.example.projectskripsi.ui.screen.StudentViewModel
 import com.example.projectskripsi.ui.theme.ProjectSkripsiTheme
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: AnnouncementViewModel by viewModels()
+    private val announcementViewModel: AnnouncementViewModel by viewModels()
+    private val studentViewModel: StudentViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             ProjectSkripsiTheme {
-                AppNavigation(viewModel = viewModel) // Ini menjadi root composable
+                AppNavigation(
+                    announcementViewModel = announcementViewModel,
+                    studentViewModel = studentViewModel // Berikan ViewModel siswa ke AppNavigation
+                )
             }
         }
     }
@@ -35,5 +40,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun AnnouncementPagePreview() {
     // Gunakan Preview untuk melihat tampilannya
-    AnnouncementPage(navController = NavController(LocalContext.current), viewModel = AnnouncementViewModel())
+    AnnouncementPage(
+        navController = NavController(LocalContext.current),
+        viewModel = AnnouncementViewModel()
+    )
 }
