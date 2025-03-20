@@ -39,7 +39,7 @@ fun StudentListPage(navController: NavController, modifier: Modifier = Modifier,
                 it.name.contains(searchQuery, ignoreCase = true)
     }
 
-    Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
+    Column(modifier = modifier.fillMaxSize().padding(16.dp, top = 40.dp)) {
         // Search and Filter UI
         TextField(
             value = searchQuery,
