@@ -62,7 +62,12 @@ data class HealthReports(
 data class HealthReport(
     @SerializedName("id") val id: Int,
     @SerializedName("student_id") val studentId: Int,
+    @SerializedName("report_date") val reportDate: Date,
     @SerializedName("report") val report: String,
+    @SerializedName("health_status") val healthStatus: String,
+    @SerializedName("symptoms") val symptoms: String,
+    @SerializedName("doctors_notes") val doctorsNotes: String,
+    @SerializedName("attachments") val attachments: String?,
     @SerializedName("created_at") val createdAt: Date,
     @SerializedName("updated_at") val updatedAt: Date
 )

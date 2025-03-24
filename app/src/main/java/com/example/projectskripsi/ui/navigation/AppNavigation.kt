@@ -88,10 +88,10 @@ fun AppNavigation(
         }
 
         composable("health_report_page"){
-            HealthReportPage(navController = navController, modifier = Modifier.fillMaxSize())
+            HealthReportPage(navController = navController, viewModel = studentViewModel, modifier = Modifier.fillMaxSize())
         }
 
-        composable("student_list") {
+        composable("student_list_page") {
             StudentListPage(navController = navController, viewModel = studentViewModel, modifier = Modifier.fillMaxSize())
         }
 
