@@ -85,7 +85,7 @@ fun MainPage(navController: NavController, modifier: Modifier = Modifier) {
                 iconRes = R.drawable.ic_academic,
                 label = "Students",
                 onClick = {
-                    navController.navigate("student_page")
+                    navController.navigate("student_list")
                 }
             )
 
