@@ -2,6 +2,8 @@ package com.example.projectskripsi.ui.screen
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -42,22 +44,23 @@ fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
-            Divider()
 
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(4.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(text = "Name: ${student.name}", fontWeight = FontWeight.Bold)
-                    Text(text = "Email: ${student.parentEmail}")
-                    Text(text = "NISN: ${student.nisn}")
-                    Text(text = "Address: ${student.address}")
-                    Text(text = "Gender: ${student.gender}")
-                    Text(text = "Parent Name: ${student.parentName}")
-                    Text(text = "Phone Number: ${student.phoneNumber}")
-                }
-            }
+//            Spacer(modifier = Modifier.height(16.dp))
+
+//            Card(
+//                modifier = Modifier.fillMaxWidth(),
+//                elevation = CardDefaults.cardElevation(4.dp)
+//            ) {
+//                Column(modifier = Modifier.padding(16.dp)) {
+//                    Text(text = "Name: ${student.name}", fontWeight = FontWeight.Bold)
+//                    Text(text = "Email: ${student.parentEmail}")
+//                    Text(text = "NISN: ${student.nisn}")
+//                    Text(text = "Address: ${student.address}")
+//                    Text(text = "Gender: ${student.gender}")
+//                    Text(text = "Parent Name: ${student.parentName}")
+//                    Text(text = "Phone Number: ${student.phoneNumber}")
+//                }
+//            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -73,61 +76,98 @@ fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel,
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            when (selectedTabIndex) {
-                0 -> AchievementsContent(response.achievements.data)
-                1 -> AttendancesContent(response.attendances.data)
-                2 -> HealthReportsContent(response.healthReports.data)
-                3 -> ViolationsContent(response.violations.data)
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
+            ) {
+                when (selectedTabIndex) {
+                    0 -> AchievementsContent(response.achievements.data)
+                    1 -> AttendancesContent(response.attendances.data)
+                    2 -> HealthReportsContent(response.healthReports.data)
+                    3 -> ViolationsContent(response.violations.data)
+                }
             }
         }
     } ?: run {
         Log.d("StudentDetailPage", "Student detail is null")
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(text = "Loading student details...", fontSize = 16.sp)
+            CircularProgressIndicator()
         }
     }
 }
 
 @Composable
 fun AchievementsContent(achievements: List<Achievement>) {
-    Column {
-        achievements.forEach { achievement ->
-            Text(text = "Achievement: ${achievement.achievementName}")
-            Text(text = "Description: ${achievement.description}")
-            Spacer(modifier = Modifier.height(8.dp))
+    LazyColumn {
+        items(achievements) { achievement ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                elevation = CardDefaults.cardElevation(2.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(text = "Achievement: ${achievement.achievementName}", fontWeight = FontWeight.Bold)
+                    Text(text = "Description: ${achievement.description}")
+                }
+            }
         }
     }
 }
 
 @Composable
 fun AttendancesContent(attendances: List<Attendance>) {
-    Column {
-        attendances.forEach { attendance ->
-            Text(text = "Date: ${attendance.date}")
-            Text(text = "Status: ${attendance.status}")
-            Spacer(modifier = Modifier.height(8.dp))
+    LazyColumn {
+        items(attendances) { attendance ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                elevation = CardDefaults.cardElevation(2.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(text = "Date: ${attendance.date}", fontWeight = FontWeight.Bold)
+                    Text(text = "Status: ${attendance.status}")
+                }
+            }
         }
     }
 }
 
 @Composable
 fun HealthReportsContent(healthReports: List<HealthReport>) {
-    Column {
-        healthReports.forEach { report ->
-            Text(text = "Report Date: ${report.reportDate}")
-            Text(text = "Health Status: ${report.healthStatus}")
-            Spacer(modifier = Modifier.height(8.dp))
+    LazyColumn {
+        items(healthReports) { report ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                elevation = CardDefaults.cardElevation(2.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(text = "Report Date: ${report.reportDate}", fontWeight = FontWeight.Bold)
+                    Text(text = "Health Status: ${report.healthStatus}")
+                }
+            }
         }
     }
 }
 
 @Composable
-fun ViolationsContent(violations: List <Violation>) {
-    Column {
-        violations.forEach { violation ->
-            Text(text = "Violation Type: ${violation.violationType}")
-            Text(text = "Description: ${violation.description}")
-            Spacer(modifier = Modifier.height(8.dp))
+fun ViolationsContent(violations: List<Violation>) {
+    LazyColumn {
+        items(violations) { violation ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                elevation = CardDefaults.cardElevation(2.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(text = "Violation Type: ${violation.violationType}", fontWeight = FontWeight.Bold)
+                    Text(text = "Description: ${violation.description}")
+                }
+            }
         }
     }
 }
