@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.projectskripsi.data.model.Student
 import com.example.projectskripsi.data.model.StudentDetail
+import com.example.projectskripsi.data.model.StudentDetailResponse
 import com.example.projectskripsi.data.network.RetrofitClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +18,9 @@ class StudentViewModel : ViewModel() {
 
     private val _studentDetail = MutableStateFlow<StudentDetail?>(null)
     val studentDetail: StateFlow<StudentDetail?> = _studentDetail
+
+    private val _studentDetailResponse = MutableStateFlow<StudentDetailResponse?>(null)
+    val studentDetailResponse: StateFlow<StudentDetailResponse?> = _studentDetailResponse
 
     fun fetchStudents() {
         viewModelScope.launch {
@@ -39,7 +43,7 @@ class StudentViewModel : ViewModel() {
             try {
                 val response = RetrofitClient.apiService.getStudentDetail(id)
                 if (response.isSuccessful) {
-                    _studentDetail.value = response.body()?.student
+                    _studentDetailResponse.value = response.body()
                     Log.d("StudentViewModel", "Fetched student detail successfully for ID: $id")
                 } else {
                     Log.e("StudentViewModel", "Failed to fetch student detail: ${response.errorBody()?.string()}")
