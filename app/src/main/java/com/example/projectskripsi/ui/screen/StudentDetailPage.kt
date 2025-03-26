@@ -22,6 +22,8 @@ import com.example.projectskripsi.data.model.Achievement
 import com.example.projectskripsi.data.model.Attendance
 import com.example.projectskripsi.data.model.HealthReport
 import com.example.projectskripsi.data.model.Violation
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel, studentId: Int) {
@@ -75,8 +77,9 @@ fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel,
                         Text(
                             text = title,
                             color = if (selectedTabIndex == index) Color.White else Color.Black,
-                            fontSize = 14.sp, // Adjust text size if needed
-                            fontWeight = FontWeight.Medium
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.SemiBold,
+                            )
                         )
                     }
                 }
@@ -106,6 +109,8 @@ fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel,
 
 @Composable
 fun AchievementsContent(achievements: List<Achievement>) {
+    // Define the date format
+    val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     LazyColumn {
         items(achievements) { achievement ->
             Card(
@@ -120,11 +125,26 @@ fun AchievementsContent(achievements: List<Achievement>) {
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Achievement: ${achievement.achievementName}",
+                        text = "${achievement.achievementName}",
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF09090B) // Consistent text color
                     )
-                    Text(text = "Description: ${achievement.description}")
+                    // Format the date
+                    val formattedDate = dateFormatter.format(achievement.date)
+
+                    Text(
+                        text = formattedDate,
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFF909096)
+                        )
+                    )
+                    Text(
+                        text = "Description: ${achievement.description}",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.Normal,
+                            color = Color(0xFF09090B))
+                        )
                 }
             }
         }

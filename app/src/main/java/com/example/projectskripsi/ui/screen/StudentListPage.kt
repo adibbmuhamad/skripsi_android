@@ -70,7 +70,7 @@ fun StudentListPage(navController: NavController, modifier: Modifier = Modifier,
             shape = RoundedCornerShape(16.dp), // More rounded corners
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = Color(0xFF909096),
+                unfocusedBorderColor = Color(0xFFF2F5F9),
                 cursorColor = MaterialTheme.colorScheme.primary,
                 unfocusedLabelColor = Color(0xFF909096)
             )
