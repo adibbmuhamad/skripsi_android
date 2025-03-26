@@ -1,13 +1,19 @@
 package com.example.projectskripsi.ui.screen
 
 import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +41,7 @@ fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel,
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(Color(0xFFF9FAFB)) // Set background color
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -45,32 +52,33 @@ fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
 
-//            Spacer(modifier = Modifier.height(16.dp))
-
-//            Card(
-//                modifier = Modifier.fillMaxWidth(),
-//                elevation = CardDefaults.cardElevation(4.dp)
-//            ) {
-//                Column(modifier = Modifier.padding(16.dp)) {
-//                    Text(text = "Name: ${student.name}", fontWeight = FontWeight.Bold)
-//                    Text(text = "Email: ${student.parentEmail}")
-//                    Text(text = "NISN: ${student.nisn}")
-//                    Text(text = "Address: ${student.address}")
-//                    Text(text = "Gender: ${student.gender}")
-//                    Text(text = "Parent Name: ${student.parentName}")
-//                    Text(text = "Phone Number: ${student.phoneNumber}")
-//                }
-//            }
-
             Spacer(modifier = Modifier.height(16.dp))
 
-            TabRow(selectedTabIndex = selectedTabIndex) {
+            // Custom scrollable tab row with reduced height
+            val scrollState = rememberScrollState()
+            Row(
+                modifier = Modifier
+                    .horizontalScroll(scrollState)
+                    .fillMaxWidth()
+            ) {
                 tabTitles.forEachIndexed { index, title ->
-                    Tab(
-                        selected = selectedTabIndex == index,
-                        onClick = { selectedTabIndex = index },
-                        text = { Text(title) }
-                    )
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 4.dp, vertical = 4.dp) // Reduced vertical padding
+                            .background(
+                                color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else Color(0xFFF2F5F9),
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                            .clickable { selectedTabIndex = index }
+                            .padding(horizontal = 12.dp, vertical = 6.dp) // Padding inside the box
+                    ) {
+                        Text(
+                            text = title,
+                            color = if (selectedTabIndex == index) Color.White else Color.Black,
+                            fontSize = 14.sp, // Adjust text size if needed
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
                 }
             }
 
@@ -78,7 +86,7 @@ fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel,
 
             Surface(
                 modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
+                color = Color(0xFFF9FAFB) // Set background color to F9FAFB
             ) {
                 when (selectedTabIndex) {
                     0 -> AchievementsContent(response.achievements.data)
@@ -104,10 +112,18 @@ fun AchievementsContent(achievements: List<Achievement>) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp),
-                elevation = CardDefaults.cardElevation(2.dp)
+                elevation = CardDefaults.cardElevation(1.dp),
+                shape = RoundedCornerShape(8.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFFFFFFF) // Set background color to white
+                )
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text(text = "Achievement: ${achievement.achievementName}", fontWeight = FontWeight.Bold)
+                    Text(
+                        text = "Achievement: ${achievement.achievementName}",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF09090B) // Consistent text color
+                    )
                     Text(text = "Description: ${achievement.description}")
                 }
             }
@@ -123,10 +139,18 @@ fun AttendancesContent(attendances: List<Attendance>) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp),
-                elevation = CardDefaults.cardElevation(2.dp)
+                elevation = CardDefaults.cardElevation(1.dp),
+                shape = RoundedCornerShape(8.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFFFFFFF) // Set background color to white
+                )
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text(text = "Date: ${attendance.date}", fontWeight = FontWeight.Bold)
+                    Text(
+                        text = "Date: ${attendance.date}",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF09090B) // Consistent text color
+                    )
                     Text(text = "Status: ${attendance.status}")
                 }
             }
@@ -142,10 +166,18 @@ fun HealthReportsContent(healthReports: List<HealthReport>) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp),
-                elevation = CardDefaults.cardElevation(2.dp)
+                elevation = CardDefaults.cardElevation(1.dp),
+                shape = RoundedCornerShape(8.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFFFFFFF) // Set background color to white
+                )
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text(text = "Report Date: ${report.reportDate}", fontWeight = FontWeight.Bold)
+                    Text(
+                        text = "Report Date: ${report.reportDate}",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF09090B) // Consistent text color
+                    )
                     Text(text = "Health Status: ${report.healthStatus}")
                 }
             }
@@ -161,10 +193,18 @@ fun ViolationsContent(violations: List<Violation>) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp),
-                elevation = CardDefaults.cardElevation(2.dp)
+                elevation = CardDefaults.cardElevation(1.dp),
+                shape = RoundedCornerShape(8.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFFFFFFF) // Set background color to white
+                )
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text(text = "Violation Type: ${violation.violationType}", fontWeight = FontWeight.Bold)
+                    Text(
+                        text = "Violation Type: ${violation.violationType}",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF09090B) // Consistent text color
+                    )
                     Text(text = "Description: ${violation.description}")
                 }
             }
