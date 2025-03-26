@@ -21,6 +21,9 @@ import com.example.projectskripsi.data.model.Student
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.ScrollState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,14 +70,31 @@ fun StudentListPage(navController: NavController, modifier: Modifier = Modifier,
 
         Spacer(modifier = Modifier.height(16.dp)) // Consistent spacing
 
-        // TabRow for class filter
-        TabRow(selectedTabIndex = selectedTabIndex) {
+        // Custom scrollable tab row with reduced height
+        val scrollState = rememberScrollState()
+        Row(
+            modifier = Modifier
+                .horizontalScroll(scrollState)
+                .fillMaxWidth()
+        ) {
             classNames.forEachIndexed { index, className ->
-                Tab(
-                    selected = selectedTabIndex == index,
-                    onClick = { selectedTabIndex = index },
-                    text = { Text(className) }
-                )
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp, vertical = 4.dp) // Reduced vertical padding
+                        .background(
+                            color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else Color(0xFFF2F5F9),
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                        .clickable { selectedTabIndex = index }
+                        .padding(horizontal = 12.dp, vertical = 6.dp) // Padding inside the box
+                ) {
+                    Text(
+                        text = "Kelas: $className",
+                        color = if (selectedTabIndex == index) Color.White else Color.Black,
+                        fontSize = 14.sp, // Adjust text size if needed
+                        fontWeight = FontWeight.Medium
+                    )
+                }
             }
         }
 
