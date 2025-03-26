@@ -60,7 +60,7 @@ fun StudentListPage(navController: NavController, modifier: Modifier = Modifier,
             label = { Text("Search by Name") },
             leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Search Icon") },
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(24.dp), // More rounded corners
+            shape = RoundedCornerShape(16.dp), // More rounded corners
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
@@ -89,7 +89,7 @@ fun StudentListPage(navController: NavController, modifier: Modifier = Modifier,
                         .padding(horizontal = 12.dp, vertical = 6.dp) // Padding inside the box
                 ) {
                     Text(
-                        text = "Kelas: $className",
+                        text = "Kelas $className",
                         color = if (selectedTabIndex == index) Color.White else Color.Black,
                         fontSize = 14.sp, // Adjust text size if needed
                         fontWeight = FontWeight.Medium
@@ -176,7 +176,7 @@ fun StudentItem(student: Student, navController: NavController) {
                     )
                 )
                 Text(
-                    text = "Class: ${student.classRoomName}",
+                    text = "Kelas ${student.classRoomName}",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF909096)
