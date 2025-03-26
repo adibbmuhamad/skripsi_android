@@ -5,6 +5,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,6 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.projectskripsi.data.model.Student
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,65 +33,52 @@ fun StudentListPage(navController: NavController, modifier: Modifier = Modifier,
     val students = viewModel.students.collectAsState()
     val isLoading = remember { mutableStateOf(true) }
     var searchQuery by remember { mutableStateOf("") }
-    var selectedClass by remember { mutableStateOf("All Classes") }
-    var expanded by remember { mutableStateOf(false) }
+    var selectedTabIndex by remember { mutableStateOf(0) }
 
     // Get unique class names
     val classNames = students.value.map { it.classRoomName }.distinct().sorted()
 
     // Filtered list based on search query and selected class
     val filteredStudents = students.value.filter {
-        (selectedClass == "All Classes" || it.classRoomName == selectedClass) &&
+        it.classRoomName == classNames[selectedTabIndex] &&
                 it.name.contains(searchQuery, ignoreCase = true)
     }
 
-    Column(modifier = modifier.fillMaxSize().padding(16.dp, top = 40.dp)) {
-        // Search and Filter UI
-        TextField(
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color(0xFFF9FAFB)) // Set background color
+            .padding(horizontal = 16.dp, vertical = 24.dp) // Consistent padding
+    ) {
+        // Search UI with Icon
+        OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
             label = { Text("Search by Name") },
-            modifier = Modifier.fillMaxWidth()
+            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Search Icon") },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(24.dp), // More rounded corners
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                cursorColor = MaterialTheme.colorScheme.primary
+            )
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp)) // Consistent spacing
 
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded }
-        ) {
-            TextField(
-                readOnly = true,
-                value = selectedClass,
-                onValueChange = {},
-                label = { Text("Filter by Class") },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.menuAnchor()
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                DropdownMenuItem(
-                    text = { Text("All Classes") },
-                    onClick = {
-                        selectedClass = "All Classes"
-                        expanded = false
-                    }
+        // TabRow for class filter
+        TabRow(selectedTabIndex = selectedTabIndex) {
+            classNames.forEachIndexed { index, className ->
+                Tab(
+                    selected = selectedTabIndex == index,
+                    onClick = { selectedTabIndex = index },
+                    text = { Text(className) }
                 )
-                classNames.forEach { className ->
-                    DropdownMenuItem(
-                        text = { Text(className) },
-                        onClick = {
-                            selectedClass = className
-                            expanded = false
-                        }
-                    )
-                }
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp)) // Consistent spacing
 
         if (isLoading.value) {
             // Tampilkan indikator loading
@@ -99,8 +92,7 @@ fun StudentListPage(navController: NavController, modifier: Modifier = Modifier,
             }
         } else {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
+                modifier = Modifier.fillMaxSize()
             ) {
                 items(filteredStudents) { student ->
                     StudentItem(student, navController)
@@ -139,31 +131,36 @@ fun StudentItem(student: Student, navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .padding(vertical = 8.dp) // Consistent vertical padding
             .clickable {
                 navController.navigate("student_detail/${student.id}")
             },
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(1.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFFFFFFF) // Set background color to white
+        )
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(16.dp), // Consistent padding inside card
             verticalAlignment = Alignment.CenterVertically
         ) {
             InitialsAvatar(name = student.name, modifier = Modifier.padding(end = 16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = student.name,
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-                )
-                Text(
-                    text = "NISN: ${student.nisn}",
-                    style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF09090B) // Set text color to #09090B
+                    )
                 )
                 Text(
                     text = "Class: ${student.classRoomName}",
-                    style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF909096)
+                    )
                 )
             }
         }
