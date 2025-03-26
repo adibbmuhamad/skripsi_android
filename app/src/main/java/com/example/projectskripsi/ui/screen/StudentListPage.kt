@@ -57,14 +57,22 @@ fun StudentListPage(navController: NavController, modifier: Modifier = Modifier,
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
-            label = { Text("Search by Name") },
-            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Search Icon") },
+            label = {
+                Text(
+                    "Cari siswa berdasarkan nama...",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.SemiBold,
+                    )
+
+                ) },
+            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Search Icon", tint = Color(0xFF909096)) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp), // More rounded corners
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                cursorColor = MaterialTheme.colorScheme.primary
+                unfocusedBorderColor = Color(0xFF909096),
+                cursorColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = Color(0xFF909096)
             )
         )
 
@@ -91,8 +99,10 @@ fun StudentListPage(navController: NavController, modifier: Modifier = Modifier,
                     Text(
                         text = "Kelas $className",
                         color = if (selectedTabIndex == index) Color.White else Color.Black,
-                        fontSize = 14.sp, // Adjust text size if needed
-                        fontWeight = FontWeight.Medium
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.SemiBold,
+                        )
+
                     )
                 }
             }
