@@ -125,6 +125,11 @@ fun AchievementsContent(achievements: List<Achievement>) {
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
+                        text = "${achievement.category}",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF909096) // Consistent text color
+                    )
+                    Text(
                         text = "${achievement.achievementName}",
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF09090B) // Consistent text color
@@ -140,7 +145,7 @@ fun AchievementsContent(achievements: List<Achievement>) {
                         )
                     )
                     Text(
-                        text = "Description: ${achievement.description}",
+                        text = "${achievement.description}",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             fontWeight = FontWeight.Normal,
                             color = Color(0xFF09090B))

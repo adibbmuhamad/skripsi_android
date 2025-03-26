@@ -34,10 +34,10 @@ data class Achievement(
     @SerializedName("student_id") val studentId: Int,
     @SerializedName("achievement_name") val achievementName: String,
     @SerializedName("description") val description: String,
-    @SerializedName("photo") val photo: String,
     @SerializedName("created_at") val createdAt: Date,
     @SerializedName("updated_at") val updatedAt: Date,
-    @SerializedName("date") val date: Date
+    @SerializedName("date") val date: Date,
+    @SerializedName("category") val category: String
 )
 
 data class Attendances(
