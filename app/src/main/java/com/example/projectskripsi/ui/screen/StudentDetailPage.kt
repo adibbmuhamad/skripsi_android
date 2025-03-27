@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,8 +26,9 @@ import com.example.projectskripsi.data.model.Achievement
 import com.example.projectskripsi.data.model.Attendance
 import com.example.projectskripsi.data.model.HealthReport
 import com.example.projectskripsi.data.model.Violation
+import java.sql.Time
 import java.text.SimpleDateFormat
-import java.util.Locale
+import java.util.*
 
 @Composable
 fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel, studentId: Int) {
@@ -133,13 +135,18 @@ fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel,
 fun AchievementsContent(achievements: List<Achievement>) {
     // Define the date format
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-    LazyColumn {
+    LazyColumn (
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF9FAFB)) // Light background for the whole screen
+            .padding(4.dp)
+    ){
         items(achievements) { achievement ->
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp),
-                elevation = CardDefaults.cardElevation(1.dp),
+                elevation = CardDefaults.cardElevation(2.dp),
                 shape = RoundedCornerShape(8.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = Color(0xFFFFFFFF) // Set background color to white
@@ -180,29 +187,122 @@ fun AchievementsContent(achievements: List<Achievement>) {
 
 @Composable
 fun AttendancesContent(attendances: List<Attendance>) {
-    LazyColumn {
-        items(attendances) { attendance ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp),
-                elevation = CardDefaults.cardElevation(1.dp),
-                shape = RoundedCornerShape(8.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFFFFFFF) // Set background color to white
-                )
+    // Sort the attendance list from the most recent
+    val sortedAttendances = attendances.sortedByDescending { it.date }
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF9FAFB)) // Light background for the whole screen
+            .padding(4.dp)
+    ) {
+        items(sortedAttendances) { attendance ->
+            AttendanceCard(attendance)
+        }
+    }
+}
+
+@Composable
+fun AttendanceCard(attendance: Attendance) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        elevation = CardDefaults.cardElevation(2.dp),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Date: ${attendance.date}",
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF09090B) // Consistent text color
+                Text(
+                    text = attendance.date.toFormattedString(),
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF09090B) // Consistent text color
+                )
+                StatusBadge(attendance.status)
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Jam Masuk: ${attendance.clockIn?.toFormattedTime() ?: "-"}",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF909096)
                     )
-                    Text(text = "Status: ${attendance.status}")
-                }
+                )
+                Text(
+                    text = "Jam Keluar: ${attendance.clockOut?.toFormattedTime() ?: "-"}",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF909096)
+                    )
+                )
+            }
+            attendance.permissionReason?.let {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Permission: $it",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        fontStyle = FontStyle.Italic, // Set the text to italic
+                        color = Color(0xFF909096)
+                    )
+                )
             }
         }
     }
+}
+
+@Composable
+fun StatusBadge(status: String) {
+    val backgroundColor = when (status) {
+        "present" -> Color(0xFFDFF0D8)
+        "absent" -> Color(0xFFF2DEDE)
+        "late" -> Color(0xFFFFF0B3)
+        else -> Color(0xFFE0E0E0)
+    }
+    val textColor = when (status) {
+        "present" -> Color(0xFF3C763D)
+        "absent" -> Color(0xFFA94442)
+        "late" -> Color(0xFF8A6D3B)
+        else -> Color(0xFF666666)
+    }
+
+    Box(
+        modifier = Modifier
+            .background(backgroundColor, shape = RoundedCornerShape(8.dp))
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+    ) {
+        Text(
+            text = status.capitalize(),
+            color = textColor,
+            fontWeight = FontWeight.Bold,
+            fontSize = 14.sp
+        )
+    }
+}
+
+fun Date.toFormattedString(): String {
+    val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    return format.format(this)
+}
+
+fun Time?.toFormattedTime(): String {
+    val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return this?.let { format.format(it) } ?: "-"
 }
 
 @Composable

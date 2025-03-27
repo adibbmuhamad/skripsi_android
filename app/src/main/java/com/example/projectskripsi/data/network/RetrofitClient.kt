@@ -1,30 +1,39 @@
 package com.example.projectskripsi.data.network
 
+import com.example.projectskripsi.ui.component.CustomTimeTypeAdapter
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.sql.Time
 
 object RetrofitClient {
 
-    private const val BASE_URL = "http://192.168.1.16:8000/" // Gantilah dengan URL API yang benar
+    private const val BASE_URL = "http://192.168.1.16:8000/" // Replace with the correct API URL
 
-    // Membuat instance HttpLoggingInterceptor
+    // Create an instance of HttpLoggingInterceptor
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY // Atur level logging sesuai kebutuhan
+        level = HttpLoggingInterceptor.Level.BODY // Set logging level as needed
     }
 
-    // Membuat instance OkHttpClient dan menambahkan interceptor
+    // Create an instance of OkHttpClient and add the interceptor
     private val httpClient = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
         .build()
 
-    // Membuat instance Retrofit dengan OkHttpClient yang sudah dikonfigurasi
+    // Create a custom Gson instance with the TimeTypeAdapter
+    private val gson: Gson = GsonBuilder()
+        .registerTypeAdapter(Time::class.java, CustomTimeTypeAdapter())
+        .create()
+
+    // Create an instance of Retrofit with the configured OkHttpClient and Gson
     val apiService: ApiService by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(httpClient) // Menambahkan client yang sudah dikonfigurasi
-            .addConverterFactory(GsonConverterFactory.create())
+            .client(httpClient) // Add the configured client
+            .addConverterFactory(GsonConverterFactory.create(gson)) // Use the custom Gson
             .build()
             .create(ApiService::class.java)
     }

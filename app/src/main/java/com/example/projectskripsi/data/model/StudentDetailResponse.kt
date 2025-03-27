@@ -2,6 +2,7 @@ package com.example.projectskripsi.data.model
 
 import com.google.gson.annotations.SerializedName
 import java.util.Date
+import java.sql.Time
 
 data class StudentDetailResponse(
     @SerializedName("student") val student: StudentDetail,
@@ -53,7 +54,8 @@ data class Attendance(
     @SerializedName("created_at") val createdAt: Date,
     @SerializedName("updated_at") val updatedAt: Date,
     @SerializedName("permission_reason") val permissionReason: String?,
-    @SerializedName("time") val time: String
+    @SerializedName("clock_in") val clockIn: Time?,
+    @SerializedName("clock_out") val clockOut: Time?
 )
 
 data class HealthReports(
