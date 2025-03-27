@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -45,17 +46,30 @@ fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel,
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = "Detail Siswa")},
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFF9FAFB)
+            Surface(
+                shadowElevation = 4.dp,
+                color = Color(0xFFFFFFFF) // Set background color to white
+            ) {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = "Detail Siswa",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF09090B) // Set text color to #09090B
+                            )
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "Back", tint = MaterialTheme.colorScheme.primary)
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent // Set to transparent to show the Surface color
+                    )
                 )
-            )
+            }
         }
     ) { innerPadding ->
         studentDetailResponse.value?.let { response ->
