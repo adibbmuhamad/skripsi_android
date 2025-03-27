@@ -8,16 +8,11 @@ data class AnnouncementDetailResponse(
 )
 
 data class AnnouncementDetail(
-    @SerializedName("id")
-    val id: Int,
-    @SerializedName("title")
-    val title: String,
-    @SerializedName("body")
-    val body: String,
-    @SerializedName("published_at")
-    val publishedAt: String,
-    @SerializedName("created_at")
-    val createdAt: String,
-    @SerializedName("updated_at")
-    val updatedAt: String
+    @SerializedName("id") val id: Int,
+    @SerializedName("title") val title: String,
+    @SerializedName("published_at") val publishedAt: String,
+    @SerializedName("created_at") val createdAt: String,
+    @SerializedName("updated_at") val updatedAt: String,
+    @SerializedName("category") val category: String,
+    @SerializedName("description") val description: String
 )

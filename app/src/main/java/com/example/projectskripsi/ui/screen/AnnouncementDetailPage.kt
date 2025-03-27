@@ -54,7 +54,7 @@ fun AnnouncementDetailPage(
                         Divider()
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = it.body ?: "No Content",
+                            text = it.description ?: "No Content",
                             style = MaterialTheme.typography.bodyLarge
                         )
                         Spacer(modifier = Modifier.height(8.dp))

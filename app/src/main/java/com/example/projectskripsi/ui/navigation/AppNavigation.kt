@@ -37,7 +37,7 @@ fun AppNavigation(
 ) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "student_list") {
+    NavHost(navController = navController, startDestination = "main_page") {
         composable("splash_screen") {
             SplashScreen(navController = navController)
         }
