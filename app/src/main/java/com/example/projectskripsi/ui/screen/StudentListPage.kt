@@ -124,7 +124,10 @@ fun StudentListPage(navController: NavController, modifier: Modifier = Modifier,
             }
         } else {
             LazyColumn(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFFF9FAFB)) // Light background for the whole screen
+                    .padding(4.dp)
             ) {
                 items(filteredStudents) { student ->
                     StudentItem(student, navController)
