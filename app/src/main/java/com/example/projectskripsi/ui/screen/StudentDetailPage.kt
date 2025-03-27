@@ -77,7 +77,7 @@ fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel,
             Log.d("StudentDetailPage", "Displaying details for student: ${student.name}")
 
             var selectedTabIndex by remember { mutableStateOf(0) }
-            val tabTitles = listOf("Achievements", "Attendances", "Health Reports", "Violations")
+            val tabTitles = listOf("Prestasi", "Kehadiran", "Laporan Kesehatan", "Pelanggaran")
 
             Column(
                 modifier = Modifier
