@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.ui.text.style.TextAlign
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -193,7 +194,7 @@ fun AnnouncementItem(announcement: Announcement, navController: NavController) {
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF09090B)
                     ),
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
                 Box(
                     modifier = Modifier
@@ -232,7 +233,8 @@ fun AnnouncementItem(announcement: Announcement, navController: NavController) {
                 text = announcement.description,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = Color(0xFF666666)
-                )
+                ),
+                textAlign = TextAlign.Justify
             )
         }
     }
