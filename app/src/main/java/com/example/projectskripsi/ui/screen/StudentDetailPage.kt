@@ -378,27 +378,60 @@ fun HealthReportCard(report: HealthReport) {
 
 @Composable
 fun ViolationsContent(violations: List<Violation>) {
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF9FAFB)) // Light background for the whole screen
+            .padding(8.dp)
+    ) {
         items(violations) { violation ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp),
-                elevation = CardDefaults.cardElevation(1.dp),
-                shape = RoundedCornerShape(8.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFFFFFFF) // Set background color to white
+            ViolationCard(violation)
+        }
+    }
+}
+
+@Composable
+fun ViolationCard(violation: Violation) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .background(Color(0xFFF9FAFB)),
+        elevation = CardDefaults.cardElevation(1.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "Jenis Pelanggaran: ${violation.violationType}",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF333333)
                 )
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Violation Type: ${violation.violationType}",
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF09090B) // Consistent text color
-                    )
-                    Text(text = "Description: ${violation.description}")
-                }
-            }
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "Keterangan: ${violation.description}",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = Color(0xFF09090B)
+                ),
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Tanggal: ${violation.createdAt.toFormattedString()}",
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFF909096)
+                )
+            )
         }
     }
 }
