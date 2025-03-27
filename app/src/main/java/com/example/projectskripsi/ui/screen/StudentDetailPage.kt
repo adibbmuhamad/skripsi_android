@@ -2,17 +2,20 @@ package com.example.projectskripsi.ui.screen
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -47,14 +50,33 @@ fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel,
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(
-                text = "Student Details",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-
             Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                InitialsAvatarDetailPage(name = student.name, modifier = Modifier.padding(end = 16.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = student.name,
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF09090B) // Set text color to #09090B
+                        )
+                    )
+                    Text(
+                        text = "Kelas ${student.classRoomName}",
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFF909096)
+                        )
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Custom scrollable tab row with reduced height
             val scrollState = rememberScrollState()
@@ -85,7 +107,7 @@ fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel,
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Surface(
                 modifier = Modifier.fillMaxSize(),
@@ -234,5 +256,26 @@ fun ViolationsContent(violations: List<Violation>) {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun InitialsAvatarDetailPage(name: String, modifier: Modifier = Modifier) {
+    // Menghitung inisial dari nama
+    val initials = name.split(" ").joinToString("") { it.take(1) }.take(2).uppercase()
+
+    Box(
+        modifier = modifier
+            .size(80.dp) // Ukuran lingkaran
+            .clip(CircleShape) // Membuat bentuk lingkaran
+            .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape) // Tambahkan border
+            .background(Color(0xFFE6ECF8)), // Warna latar belakang lingkaran
+        contentAlignment = Alignment.Center // Menyelaraskan konten di tengah
+    ) {
+        Text(
+            text = initials,
+            color = MaterialTheme.colorScheme.primary, // Warna teks
+            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+        )
     }
 }

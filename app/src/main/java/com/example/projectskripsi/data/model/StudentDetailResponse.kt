@@ -20,6 +20,7 @@ data class StudentDetail(
     @SerializedName("created_at") val createdAt: Date,
     @SerializedName("updated_at") val updatedAt: Date,
     @SerializedName("class_room_id") val classRoomId: Int,
+    @SerializedName("class_room_name") val classRoomName: String,
     @SerializedName("gender") val gender: String,
     @SerializedName("parent_name") val parentName: String,
     @SerializedName("phone_number") val phoneNumber: String

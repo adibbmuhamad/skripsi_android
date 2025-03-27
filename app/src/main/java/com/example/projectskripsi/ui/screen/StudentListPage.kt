@@ -24,6 +24,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -141,17 +143,20 @@ fun StudentListPage(navController: NavController, modifier: Modifier = Modifier,
 
 @Composable
 fun InitialsAvatar(name: String, modifier: Modifier = Modifier) {
-    val initials = name.split(" ").mapNotNull { it.firstOrNull()?.toString() }.take(2).joinToString("")
+    // Menghitung inisial dari nama
+    val initials = name.split(" ").joinToString("") { it.take(1) }.take(2).uppercase()
+
     Box(
         modifier = modifier
-            .size(48.dp)
-            .background(MaterialTheme.colorScheme.primary, shape = MaterialTheme.shapes.medium),
-        contentAlignment = Alignment.Center
+            .size(40.dp) // Ukuran lingkaran
+            .clip(CircleShape) // Membuat bentuk lingkaran
+            .background(MaterialTheme.colorScheme.primary), // Warna latar belakang lingkaran
+        contentAlignment = Alignment.Center // Menyelaraskan konten di tengah
     ) {
         Text(
             text = initials,
-            color = Color.White,
-            style = MaterialTheme.typography.titleMedium
+            color = Color.White, // Warna teks
+            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
         )
     }
 }
@@ -176,6 +181,7 @@ fun StudentItem(student: Student, navController: NavController) {
                 .padding(16.dp), // Consistent padding inside card
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Menggunakan InitialsAvatar yang sudah dimodifikasi
             InitialsAvatar(name = student.name, modifier = Modifier.padding(end = 16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
