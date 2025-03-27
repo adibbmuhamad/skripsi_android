@@ -19,6 +19,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -307,27 +309,69 @@ fun Time?.toFormattedTime(): String {
 
 @Composable
 fun HealthReportsContent(healthReports: List<HealthReport>) {
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF9FAFB)) // Light background for the whole screen
+            .padding(8.dp)
+    ) {
         items(healthReports) { report ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp),
+            HealthReportCard(report)
+        }
+    }
+}
+
+@Composable
+fun HealthReportCard(report: HealthReport) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .background(Color(0xFFF9FAFB)),
                 elevation = CardDefaults.cardElevation(1.dp),
-                shape = RoundedCornerShape(8.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFFFFFFF) // Set background color to white
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "Tanggal Laporan: ${report.reportDate}",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF333333)
                 )
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Report Date: ${report.reportDate}",
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF09090B) // Consistent text color
-                    )
-                    Text(text = "Health Status: ${report.healthStatus}")
-                }
-            }
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "Status Kesehatan: ${report.healthStatus}",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = Color(0xFF909096)
+                )
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Gejala: ${report.symptoms}",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = Color(0xFF09090B),
+                    fontStyle = FontStyle.Italic
+                ),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Catatan Dokter: ${report.doctorsNotes}",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = Color(0xFF09090B)
+                ),
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
