@@ -375,7 +375,7 @@ fun InitialsAvatarDetailPage(name: String, modifier: Modifier = Modifier) {
         Text(
             text = initials,
             color = MaterialTheme.colorScheme.primary, // Warna teks
-            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
         )
     }
 }
