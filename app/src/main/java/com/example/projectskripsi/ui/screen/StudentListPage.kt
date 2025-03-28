@@ -26,6 +26,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,7 +55,7 @@ fun StudentListPage(navController: NavController, modifier: Modifier = Modifier,
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFFF9FAFB)) // Set background color
-            .padding(horizontal = 16.dp, vertical = 24.dp) // Consistent padding
+            .padding(horizontal = 16.dp) // Consistent padding
     ) {
         // Search UI with Icon
         OutlinedTextField(
@@ -92,7 +94,9 @@ fun StudentListPage(navController: NavController, modifier: Modifier = Modifier,
                     modifier = Modifier
                         .padding(horizontal = 4.dp, vertical = 4.dp) // Reduced vertical padding
                         .background(
-                            color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else Color(0xFFF2F5F9),
+                            color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else Color(
+                                0xFFF2F5F9
+                            ),
                             shape = RoundedCornerShape(16.dp)
                         )
                         .clickable { selectedTabIndex = index }
@@ -127,7 +131,6 @@ fun StudentListPage(navController: NavController, modifier: Modifier = Modifier,
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color(0xFFF9FAFB)) // Light background for the whole screen
-                    .padding(4.dp)
             ) {
                 items(filteredStudents) { student ->
                     StudentItem(student, navController)
@@ -204,4 +207,14 @@ fun StudentItem(student: Student, navController: NavController) {
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun StudentListPagePreview() {
+    MaterialTheme {
+        StudentListPage(navController = NavController(LocalContext.current), viewModel = StudentViewModel())
+    }
+
+
 }
