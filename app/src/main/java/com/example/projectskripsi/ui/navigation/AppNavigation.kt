@@ -1,7 +1,10 @@
 package com.example.projectskripsi.ui.navigation
 
+import BottomNavigationBar
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
@@ -18,6 +21,7 @@ import com.example.projectskripsi.ui.screen.AttendancePage
 import com.example.projectskripsi.ui.screen.HealthReportPage
 import com.example.projectskripsi.ui.screen.LoginPage
 import com.example.projectskripsi.ui.screen.MainPage
+import com.example.projectskripsi.ui.screen.NotificationPage
 import com.example.projectskripsi.ui.screen.OnBoarding1Page
 import com.example.projectskripsi.ui.screen.OnBoarding2Page
 import com.example.projectskripsi.ui.screen.OnBoarding3Page
@@ -37,7 +41,12 @@ fun AppNavigation(
 ) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "main_page") {
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(navController = navController)
+        }
+    ) { innerPadding ->
+    NavHost(navController = navController, startDestination = "main_page", modifier = Modifier.padding(innerPadding)) {
         composable("splash_screen") {
             SplashScreen(navController = navController)
         }
@@ -106,6 +115,10 @@ fun AppNavigation(
         composable("violation_page"){
             ViolationPage(navController = navController, modifier = Modifier.fillMaxSize())
         }
+
+        composable("notification_page"){
+            NotificationPage(navController = navController, modifier = Modifier.fillMaxSize())
+        }
     }
-}
+}}
 
