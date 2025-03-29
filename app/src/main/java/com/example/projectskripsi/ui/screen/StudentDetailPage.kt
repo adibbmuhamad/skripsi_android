@@ -84,9 +84,10 @@ fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel,
                     .fillMaxSize()
                     .background(Color(0xFFF9FAFB)) // Set background color
                     .padding(innerPadding)
-                    .padding(16.dp),
+                    .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                Spacer(modifier = Modifier.height(16.dp))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -111,7 +112,6 @@ fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel,
                     }
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
 
                 // Custom scrollable tab row with reduced height
                 val scrollState = rememberScrollState()
@@ -142,7 +142,6 @@ fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel,
                     }
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
