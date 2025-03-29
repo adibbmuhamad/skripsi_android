@@ -31,6 +31,7 @@ import com.example.projectskripsi.data.model.Achievement
 import com.example.projectskripsi.data.model.Attendance
 import com.example.projectskripsi.data.model.HealthReport
 import com.example.projectskripsi.data.model.Violation
+import com.example.projectskripsi.ui.component.CustomAppBar
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
@@ -46,30 +47,10 @@ fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel,
 
     Scaffold(
         topBar = {
-            Surface(
-                shadowElevation = 4.dp,
-                color = Color(0xFFFFFFFF) // Set background color to white
-            ) {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = "Detail Siswa",
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF09090B) // Set text color to #09090B
-                            )
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "Back", tint = MaterialTheme.colorScheme.primary)
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.Transparent // Set to transparent to show the Surface color
-                    )
-                )
-            }
+            CustomAppBar(
+                title = "Detail Siswa",
+                onBackClick = { navController.popBackStack() }
+            )
         }
     ) { innerPadding ->
         studentDetailResponse.value?.let { response ->
