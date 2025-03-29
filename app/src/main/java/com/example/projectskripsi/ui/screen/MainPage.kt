@@ -2,6 +2,7 @@ package com.example.projectskripsi.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -58,6 +61,7 @@ fun MainPage(navController: NavController, viewModel: AnnouncementViewModel = vi
     Column(
         modifier = modifier
             .fillMaxSize()
+            .background(Color(0xFFF9FAFB)) // Set background color
             .padding(16.dp)
     ) {
         // Display Feature Buttons
@@ -130,15 +134,37 @@ fun MainPage(navController: NavController, viewModel: AnnouncementViewModel = vi
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Display Announcements
-        Text(
-            text = "Latest Announcements",
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF09090B)
-            ),
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
+        // Display Announcements Header
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.CalendarMonth, // Ganti dengan ikon yang sesuai
+                contentDescription = "Pengumuman",
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Pengumuman",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF09090B)
+                ),
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = "Tampilkan Semua",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.SemiBold
+                ),
+                modifier = Modifier.clickable { navController.navigate("announcement_page") }
+            )
+        }
 
         if (isLoading) {
             // Tampilkan indikator loading jika sedang memuat
