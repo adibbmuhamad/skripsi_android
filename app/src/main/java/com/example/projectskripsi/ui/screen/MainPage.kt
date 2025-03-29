@@ -45,9 +45,15 @@ import com.example.projectskripsi.data.model.Announcement
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.projectskripsi.data.model.Student
 
 @Composable
-fun MainPage(navController: NavController, viewModel: AnnouncementViewModel = viewModel(), studentViewModel: StudentViewModel = viewModel(), modifier: Modifier = Modifier) {
+fun MainPage(
+    navController: NavController,
+    viewModel: AnnouncementViewModel = viewModel(),
+    studentViewModel: StudentViewModel = viewModel(),
+    modifier: Modifier = Modifier
+) {
     // Mengamati perubahan pada daftar pengumuman
     val announcements by remember { derivedStateOf { viewModel.announcements } }
     val isLoading by viewModel.isLoading
@@ -68,76 +74,6 @@ fun MainPage(navController: NavController, viewModel: AnnouncementViewModel = vi
             .background(Color(0xFFF9FAFB)) // Set background color
             .padding(16.dp)
     ) {
-        // Display Feature Buttons
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // First Column for first 3 buttons
-            Column(
-                verticalArrangement = Arrangement.spacedBy(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                FeatureButton(
-                    iconRes = R.drawable.ic_trophy,
-                    label = "Achievements",
-                    onClick = {
-                        navController.navigate("achievement_page")
-                    }
-                )
-
-                FeatureButton(
-                    iconRes = R.drawable.ic_megaphone,
-                    label = "Announcements",
-                    onClick = {
-                        navController.navigate("announcement_page")
-                    }
-                )
-
-                FeatureButton(
-                    iconRes = R.drawable.ic_user,
-                    label = "Attendances",
-                    onClick = {
-                        navController.navigate("attendance_page")
-                    }
-                )
-            }
-
-            Spacer(modifier = Modifier.width(24.dp))
-
-            // Second Column for last 3 buttons
-            Column(
-                verticalArrangement = Arrangement.spacedBy(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                FeatureButton(
-                    iconRes = R.drawable.ic_heart,
-                    label = "Health Reports",
-                    onClick = {
-                        navController.navigate("health_report_page")
-                    }
-                )
-
-                FeatureButton(
-                    iconRes = R.drawable.ic_academic,
-                    label = "Students",
-                    onClick = {
-                        navController.navigate("student_list")
-                    }
-                )
-
-                FeatureButton(
-                    iconRes = R.drawable.ic_x_circle,
-                    label = "Violations",
-                    onClick = {
-                        navController.navigate("violation_page")
-                    }
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
         // Display Announcements Header
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -191,11 +127,11 @@ fun MainPage(navController: NavController, viewModel: AnnouncementViewModel = vi
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier .height(24.dp))
 
         // Display Students Header
         Row(
-            verticalAlignment = Alignment .CenterVertically,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
@@ -208,70 +144,30 @@ fun MainPage(navController: NavController, viewModel: AnnouncementViewModel = vi
                 ),
                 modifier = Modifier.weight(1f)
             )
+            Text(
+                text = "Lihat Semua Siswa",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.SemiBold
+                ),
+                modifier = Modifier.clickable { navController.navigate("student_list") }
+            )
         }
 
         // Tampilkan daftar siswa jika ada
         if (students.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 Text("Tidak ada siswa tersedia", color = Color.Gray)
             }
         } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f) // Pastikan LazyColumn mengisi ruang yang tersisa
-            ) {
-                items(students) { student ->
-                    StudentItem(student = student, navController = navController)
+            Column {
+                students.sortedByDescending { it.createdAt }.take(5).forEach { student -> // Urutkan dan batasi hanya 5 siswa
+                    SimpleStudentItem(student = student, navController = navController)
                 }
             }
         }
     }
 }
-
-@Composable
-private fun FeatureButton(
-    iconRes: Int,
-    label: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier,
-        shape = MaterialTheme.shapes.medium,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(16.dp)
-        ) {
-            IconButton(
-                onClick = onClick,
-                modifier = Modifier.size(72.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = iconRes),
-                    contentDescription = null, // Decorative image
-                    modifier = Modifier.size(48.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelMedium,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
-            )
-        }
-    }
-}
-
 @Composable
 fun SimpleAnnouncementItem(announcement: Announcement) {
     val formattedDate = formatPublishedDate(announcement.publishedAt)
@@ -327,6 +223,59 @@ fun SimpleAnnouncementItem(announcement: Announcement) {
                 Icon(
                     imageVector = Icons.Filled.CalendarToday,
                     contentDescription = "Published Date",
+                    tint = Color(0xFF999999),
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = formattedDate,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = Color(0xFF999999)
+                    )
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SimpleStudentItem(student: Student, navController: NavController) {
+    val formattedDate = formatPublishedDate(student.createdAt.toString())
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .clickable {
+                navController.navigate("student_detail/${student.id}")
+            },
+        elevation = CardDefaults.cardElevation(1.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFFFFFFF) // Set background color to white
+        )
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = student.name,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF09090B) // Set text color to #09090B
+                )
+            )
+            Text(
+                text = "Kelas ${student.classRoomName}",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFF909096)
+                )
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.CalendarToday,
+                    contentDescription = "Created Date",
                     tint = Color(0xFF999999),
                     modifier = Modifier.size(16.dp)
                 )
