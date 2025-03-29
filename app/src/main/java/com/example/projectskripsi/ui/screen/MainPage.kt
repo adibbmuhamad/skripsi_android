@@ -47,15 +47,19 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun MainPage(navController: NavController, viewModel: AnnouncementViewModel = viewModel(), modifier: Modifier = Modifier) {
+fun MainPage(navController: NavController, viewModel: AnnouncementViewModel = viewModel(), studentViewModel: StudentViewModel = viewModel(), modifier: Modifier = Modifier) {
     // Mengamati perubahan pada daftar pengumuman
     val announcements by remember { derivedStateOf { viewModel.announcements } }
     val isLoading by viewModel.isLoading
     val errorMessage by viewModel.errorMessage
 
-    // Memanggil getAnnouncements saat MainPage dimuat
+    // Mengamati perubahan pada daftar siswa
+    val students by studentViewModel.students.collectAsState()
+
+    // Memanggil getAnnouncements dan fetchStudents saat MainPage dimuat
     LaunchedEffect(Unit) {
         viewModel.getAnnouncements()
+        studentViewModel.fetchStudents()
     }
 
     Column(
@@ -183,6 +187,42 @@ fun MainPage(navController: NavController, viewModel: AnnouncementViewModel = vi
             ) {
                 items(announcements) { announcement ->
                     SimpleAnnouncementItem(announcement = announcement)
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Display Students Header
+        Row(
+            verticalAlignment = Alignment .CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
+            Text(
+                text = "Daftar Siswa Terbaru",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF09090B)
+                ),
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        // Tampilkan daftar siswa jika ada
+        if (students.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("Tidak ada siswa tersedia", color = Color.Gray)
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f) // Pastikan LazyColumn mengisi ruang yang tersisa
+            ) {
+                items(students) { student ->
+                    StudentItem(student = student, navController = navController)
                 }
             }
         }
