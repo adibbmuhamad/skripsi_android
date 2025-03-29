@@ -29,6 +29,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudentListPage(navController: NavController, modifier: Modifier = Modifier, viewModel: StudentViewModel) {
@@ -42,6 +45,9 @@ fun StudentListPage(navController: NavController, modifier: Modifier = Modifier,
     var searchQuery by remember { mutableStateOf("") }
     var selectedTabIndex by remember { mutableStateOf(0) }
 
+    // State untuk SwipeRefresh
+    val isRefreshing = remember { mutableStateOf(false) }
+
     // Get unique class names
     val classNames = students.value.map { it.classRoomName }.distinct().sorted()
 
@@ -51,89 +57,97 @@ fun StudentListPage(navController: NavController, modifier: Modifier = Modifier,
                 it.name.contains(searchQuery, ignoreCase = true)
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFFF9FAFB)) // Set background color
-            .padding(horizontal = 16.dp) // Consistent padding
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing.value),
+        onRefresh = {
+            isRefreshing.value = true
+            viewModel.fetchStudents() // Memanggil ulang data siswa
+            isRefreshing.value = false // Setel kembali ke false setelah selesai
+        }
     ) {
-        // Search UI with Icon
-        OutlinedTextField(
-            value = searchQuery,
-            onValueChange = { searchQuery = it },
-            label = {
-                Text(
-                    "Cari siswa berdasarkan nama...",
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontWeight = FontWeight.SemiBold,
-                    )
-
-                ) },
-            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Search Icon", tint = Color(0xFF909096)) },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp), // More rounded corners
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = Color(0xFFF2F5F9),
-                cursorColor = MaterialTheme.colorScheme.primary,
-                unfocusedLabelColor = Color(0xFF909096)
-            )
-        )
-
-        Spacer(modifier = Modifier.height(16.dp)) // Consistent spacing
-
-        // Custom scrollable tab row with reduced height
-        val scrollState = rememberScrollState()
-        Row(
-            modifier = Modifier
-                .horizontalScroll(scrollState)
-                .fillMaxWidth()
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .background(Color(0xFFF9FAFB)) // Set background color
+                .padding(horizontal = 16.dp) // Consistent padding
         ) {
-            classNames.forEachIndexed { index, className ->
-                Box(
-                    modifier = Modifier
-                        .padding(horizontal = 4.dp, vertical = 4.dp) // Reduced vertical padding
-                        .background(
-                            color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else Color(
-                                0xFFF2F5F9
-                            ),
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                        .clickable { selectedTabIndex = index }
-                        .padding(horizontal = 12.dp, vertical = 6.dp) // Padding inside the box
-                ) {
+            // Search UI with Icon
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                label = {
                     Text(
-                        text = "Kelas $className",
-                        color = if (selectedTabIndex == index) Color.White else Color.Black,
+                        "Cari siswa berdasarkan nama...",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             fontWeight = FontWeight.SemiBold,
                         )
-
                     )
+                },
+                leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Search Icon", tint = Color(0xFF909096)) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp), // More rounded corners
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = Color(0xFFF2F5F9),
+                    cursorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedLabelColor = Color(0xFF909096)
+                )
+            )
+
+            Spacer(modifier = Modifier.height(16.dp)) // Consistent spacing
+
+            // Custom scrollable tab row with reduced height
+            val scrollState = rememberScrollState()
+            Row(
+                modifier = Modifier
+                    .horizontalScroll(scrollState)
+                    .fillMaxWidth()
+            ) {
+                classNames.forEachIndexed { index, className ->
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 4.dp, vertical = 4.dp) // Reduced vertical padding
+                            .background(
+                                color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else Color(
+                                    0xFFF2F5F9
+                                ),
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                            .clickable { selectedTabIndex = index }
+                            .padding(horizontal = 12.dp, vertical = 6.dp) // Padding inside the box
+                    ) {
+                        Text(
+                            text = "Kelas $className",
+                            color = if (selectedTabIndex == index) Color.White else Color.Black,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.SemiBold,
+                            )
+                        )
+                    }
                 }
             }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp)) // Consistent spacing
+            Spacer(modifier = Modifier.height(16.dp)) // Consistent spacing
 
-        if (isLoading.value) {
-            // Tampilkan indikator loading
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        } else if (filteredStudents.isEmpty()) {
-            // Tampilkan pesan jika daftar kosong
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("No students available", fontSize = 18.sp, color = Color.Gray)
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFFF9FAFB)) // Light background for the whole screen
-            ) {
-                items(filteredStudents) { student ->
-                    StudentItem(student, navController)
+            if (isLoading.value) {
+                // Tampilkan indikator loading
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            } else if (filteredStudents.isEmpty()) {
+                // Tampilkan pesan jika daftar kosong
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("No students available", fontSize = 18.sp, color = Color.Gray)
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0xFFF9FAFB)) // Light background for the whole screen
+                ) {
+                    items(filteredStudents) { student ->
+                        StudentItem(student, navController)
+                    }
                 }
             }
         }
