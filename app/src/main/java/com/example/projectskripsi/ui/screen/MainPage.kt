@@ -211,7 +211,7 @@ fun SimpleAnnouncementItem(announcement: Announcement) {
             containerColor = Color.White
         )
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -291,7 +291,7 @@ fun SimpleStudentItem(student: Student, navController: NavController) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp), // Consistent padding inside card
+                .padding(horizontal = 16.dp, vertical = 4.dp), // Consistent padding inside card
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Menambahkan InitialsAvatar
