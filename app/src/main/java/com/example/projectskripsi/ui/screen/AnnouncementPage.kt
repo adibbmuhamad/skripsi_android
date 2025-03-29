@@ -33,6 +33,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.projectskripsi.ui.component.CustomAppBar
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,6 +50,8 @@ fun AnnouncementPage(navController: NavController, viewModel: AnnouncementViewMo
     var selectedTabIndex by remember { mutableStateOf(0) }
     var searchQuery by remember { mutableStateOf("") }
     val tabTitles = listOf("Semua", "Penting", "Info", "Acara")
+    // State untuk SwipeRefresh
+    val isRefreshing = remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -58,6 +62,14 @@ fun AnnouncementPage(navController: NavController, viewModel: AnnouncementViewMo
         },
         containerColor = Color(0xFFF9FAFB)
     ) { innerPadding ->
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isRefreshing.value),
+            onRefresh = {
+                isRefreshing.value = true
+                viewModel.getAnnouncements() // Memanggil ulang data pengumuman
+                isRefreshing.value = false // Setel kembali ke false setelah selesai
+            }
+        ) {
         Column(modifier = modifier
             .fillMaxSize()
             .padding(innerPadding)
@@ -141,7 +153,7 @@ fun AnnouncementPage(navController: NavController, viewModel: AnnouncementViewMo
                     }
                 }
             }
-        }
+        }}
     }
 }
 
