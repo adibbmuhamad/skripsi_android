@@ -254,33 +254,43 @@ fun SimpleStudentItem(student: Student, navController: NavController) {
             containerColor = Color(0xFFFFFFFF) // Set background color to white
         )
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp), // Consistent padding inside card
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Menambahkan InitialsAvatar
+            InitialsAvatar(name = student.name, modifier = Modifier.padding(end = 16.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = student.name,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF09090B) // Set text color to #09090B
+                        ),
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        text = formattedDate,
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFF909096)
+                        )
+                    )
+                }
                 Text(
-                    text = student.name,
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF09090B) // Set text color to #09090B
-                    ),
-                    modifier = Modifier.weight(1f)
-                )
-                Text(
-                    text = formattedDate,
+                    text = "Kelas ${student.classRoomName}",
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = Color(0xFF999999)
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF909096)
                     )
                 )
             }
-            Text(
-                text = "Kelas ${student.classRoomName}",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF909096)
-                )
-            )
         }
     }
 }
