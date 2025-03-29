@@ -1,7 +1,9 @@
 package com.example.projectskripsi.ui.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
@@ -42,7 +46,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun MainPage(navController: NavController, viewModel: AnnouncementViewModel = viewModel(), modifier: Modifier = Modifier) {
     // Mengamati perubahan pada daftar pengumuman
-    val announcements by remember { derivedStateOf { viewModel.announcements.take(3) } }
+    val announcements by remember { derivedStateOf { viewModel.announcements } }
     val isLoading by viewModel.isLoading
     val errorMessage by viewModel.errorMessage
 
@@ -138,14 +142,22 @@ fun MainPage(navController: NavController, viewModel: AnnouncementViewModel = vi
 
         if (isLoading) {
             // Tampilkan indikator loading jika sedang memuat
-            CircularProgressIndicator()
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
         } else if (errorMessage.isNotEmpty()) {
             // Tampilkan pesan error jika ada
             Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
         } else {
             // Tampilkan pengumuman jika ada
-            announcements.forEach { announcement ->
-                SimpleAnnouncementItem(announcement = announcement)
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f) // Pastikan LazyColumn mengisi ruang yang tersisa
+            ) {
+                items(announcements) { announcement ->
+                    SimpleAnnouncementItem(announcement = announcement)
+                }
             }
         }
     }
@@ -197,6 +209,7 @@ private fun FeatureButton(
 @Composable
 fun SimpleAnnouncementItem(announcement: Announcement) {
     val formattedDate = formatPublishedDate(announcement.publishedAt)
+    val translatedCategory = translateCategory(announcement.category)
 
     Card(
         modifier = Modifier
@@ -209,15 +222,38 @@ fun SimpleAnnouncementItem(announcement: Announcement) {
         )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = announcement.title,
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF09090B)
-                ),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = announcement.title,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF09090B)
+                    ),
+                    modifier = Modifier.weight(1f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Box(
+                    modifier = Modifier
+                        .background(
+                            getCategoryBackgroundColor(announcement.category),
+                            RoundedCornerShape(8.dp)
+                        )
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = translatedCategory,
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            color = getCategoryTextColor(announcement.category),
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(4.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically
