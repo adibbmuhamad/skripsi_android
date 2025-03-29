@@ -129,7 +129,7 @@ fun AnnouncementPage(navController: NavController, viewModel: AnnouncementViewMo
                 val filteredAnnouncements = announcements.filter {
                     (selectedTabIndex == 0 || it.category.equals(getOriginalCategoryName(tabTitles[selectedTabIndex]), ignoreCase = true)) &&
                             it.title.contains(searchQuery, ignoreCase = true)
-                }
+                }.sortedByDescending { it.publishedAt }
 
                 LazyColumn(
                     modifier = Modifier
