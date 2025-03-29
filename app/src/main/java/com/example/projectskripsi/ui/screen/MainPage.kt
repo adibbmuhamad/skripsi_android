@@ -49,6 +49,9 @@ import com.example.projectskripsi.data.model.Student
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+
 @Composable
 fun MainPage(
     navController: NavController,
@@ -73,58 +76,61 @@ fun MainPage(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState()) // Menambahkan scroll vertikal
             .background(Color(0xFFF9FAFB)) // Set background color
             .padding(16.dp)
     ) {
         // Display Announcements Header
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp)
+                .background(Color(0xFFFFFFFF), shape = RoundedCornerShape(16.dp))
         ) {
-            Icon(
-                imageVector = Icons.Outlined.CalendarMonth, // Ganti dengan ikon yang sesuai
-                contentDescription = "Pengumuman",
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Pengumuman",
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF09090B)
-                ),
-                modifier = Modifier.weight(1f)
-            )
-            Text(
-                text = "Tampilkan Semua",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold
-                ),
-                modifier = Modifier.clickable { navController.navigate("announcement_page") }
-            )
-        }
-
-        if (isLoading) {
-            // Tampilkan indikator loading jika sedang memuat
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        } else if (errorMessage.isNotEmpty()) {
-            // Tampilkan pesan error jika ada
-            Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
-        } else {
-            // Tampilkan pengumuman jika ada
-            LazyColumn(
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f) // Pastikan LazyColumn mengisi ruang yang tersisa
+                    .padding(vertical = 16.dp, horizontal = 16.dp)
             ) {
-                items(announcements) { announcement ->
-                    SimpleAnnouncementItem(announcement = announcement)
+                Icon(
+                    imageVector = Icons.Outlined.CalendarMonth, // Ganti dengan ikon yang sesuai
+                    contentDescription = "Pengumuman",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Pengumuman",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF09090B)
+                    ),
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    text = "Tampilkan Semua",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.SemiBold
+                    ),
+                    modifier = Modifier.clickable { navController.navigate("announcement_page") }
+                )
+            }
+
+            if (isLoading) {
+                // Tampilkan indikator loading jika sedang memuat
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            } else if (errorMessage.isNotEmpty()) {
+                // Tampilkan pesan error jika ada
+                Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
+            } else {
+                // Tampilkan pengumuman jika ada
+                Column {
+                    announcements.take(5).forEach { announcement -> // Batasi hanya 5 pengumuman
+                        SimpleAnnouncementItem(announcement = announcement)
+                    }
                 }
             }
         }
@@ -132,35 +138,38 @@ fun MainPage(
         Spacer(modifier = Modifier.height(24.dp))
 
         // Display Students Header
-        Column (                modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)){
-            Text(
-                text = "Siswa Terbaru",
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF09090B)
-                ),
-            )
-            Text(
-                text = "Daftar siswa yang baru bergabung",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF909096)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFFFFFFF), shape = RoundedCornerShape(16.dp))
+        ) {
+            Column(Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
+                Text(
+                    text = "Siswa Terbaru",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF09090B)
+                    ),
                 )
-            )
-        }
-
-
-        // Tampilkan daftar siswa jika ada
-        if (students.isEmpty()) {
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                Text("Tidak ada siswa tersedia", color = Color.Gray)
+                Text(
+                    text = "Daftar siswa yang baru bergabung",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF909096)
+                    )
+                )
             }
-        } else {
-            Column {
-                students.sortedByDescending { it.createdAt }.take(5).forEach { student -> // Urutkan dan batasi hanya 5 siswa
-                    SimpleStudentItem(student = student, navController = navController)
+
+            // Tampilkan daftar siswa jika ada
+            if (students.isEmpty()) {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    Text("Tidak ada siswa tersedia", color = Color.Gray)
+                }
+            } else {
+                Column {
+                    students.sortedByDescending { it.createdAt }.take(5).forEach { student -> // Urutkan dan batasi hanya 5 siswa
+                        SimpleStudentItem(student = student, navController = navController)
+                    }
                 }
             }
         }
@@ -175,8 +184,6 @@ fun SimpleAnnouncementItem(announcement: Announcement) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         )
@@ -245,11 +252,7 @@ fun SimpleStudentItem(student: Student, navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable {
-                navController.navigate("student_detail/${student.id}")
-            },
-        elevation = CardDefaults.cardElevation(1.dp),
+            .padding(vertical = 8.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFFFFFFFF) // Set background color to white
         )
