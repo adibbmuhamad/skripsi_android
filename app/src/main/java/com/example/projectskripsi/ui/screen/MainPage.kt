@@ -6,96 +6,147 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.example.projectskripsi.R
+import com.example.projectskripsi.data.model.Announcement
+
+
+import androidx.compose.runtime.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun MainPage(navController: NavController, modifier: Modifier = Modifier) {
-    Row(
+fun MainPage(navController: NavController, viewModel: AnnouncementViewModel = viewModel(), modifier: Modifier = Modifier) {
+    // Mengamati perubahan pada daftar pengumuman
+    val announcements by remember { derivedStateOf { viewModel.announcements.take(3) } }
+    val isLoading by viewModel.isLoading
+    val errorMessage by viewModel.errorMessage
+
+    // Memanggil getAnnouncements saat MainPage dimuat
+    LaunchedEffect(Unit) {
+        viewModel.getAnnouncements()
+    }
+
+    Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(16.dp)
     ) {
-        // First Column for first 3 buttons
-        Column(
-            verticalArrangement = Arrangement.spacedBy(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+        // Display Feature Buttons
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            FeatureButton(
-                iconRes = R.drawable.ic_trophy,
-                label = "Achievements",
-                onClick = {
-                    navController.navigate("achievement_page")
-                }
-            )
+            // First Column for first 3 buttons
+            Column(
+                verticalArrangement = Arrangement.spacedBy(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                FeatureButton(
+                    iconRes = R.drawable.ic_trophy,
+                    label = "Achievements",
+                    onClick = {
+                        navController.navigate("achievement_page")
+                    }
+                )
 
-            FeatureButton(
-                iconRes = R.drawable.ic_megaphone,
-                label = "Announcements",
-                onClick = {
-                    navController.navigate("announcement_page")
-                }
-            )
+                FeatureButton(
+                    iconRes = R.drawable.ic_megaphone,
+                    label = "Announcements",
+                    onClick = {
+                        navController.navigate("announcement_page")
+                    }
+                )
 
-            FeatureButton(
-                iconRes = R.drawable.ic_user,
-                label = "Attendances",
-                onClick = {
-                    navController.navigate("attendance_page")
-                }
-            )
+                FeatureButton(
+                    iconRes = R.drawable.ic_user,
+                    label = "Attendances",
+                    onClick = {
+                        navController.navigate("attendance_page")
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.width(24.dp))
+
+            // Second Column for last 3 buttons
+            Column(
+                verticalArrangement = Arrangement.spacedBy(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                FeatureButton(
+                    iconRes = R.drawable.ic_heart,
+                    label = "Health Reports",
+                    onClick = {
+                        navController.navigate("health_report_page")
+                    }
+                )
+
+                FeatureButton(
+                    iconRes = R.drawable.ic_academic,
+                    label = "Students",
+                    onClick = {
+                        navController.navigate("student_list")
+                    }
+                )
+
+                FeatureButton(
+                    iconRes = R.drawable.ic_x_circle,
+                    label = "Violations",
+                    onClick = {
+                        navController.navigate("violation_page")
+                    }
+                )
+            }
         }
 
-        Spacer(modifier = Modifier.width(24.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-        // Second Column for last 3 buttons
-        Column(
-            verticalArrangement = Arrangement.spacedBy(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            FeatureButton(
-                iconRes = R.drawable.ic_heart,
-                label = "Health Reports",
-                onClick = {
-                    navController.navigate("health_report_page")
-                }
-            )
+        // Display Announcements
+        Text(
+            text = "Latest Announcements",
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF09090B)
+            ),
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
 
-            FeatureButton(
-                iconRes = R.drawable.ic_academic,
-                label = "Students",
-                onClick = {
-                    navController.navigate("student_list")
-                }
-            )
-
-            FeatureButton(
-                iconRes = R.drawable.ic_x_circle,
-                label = "Violations",
-                onClick = {
-                    navController.navigate("violation_page")
-                }
-            )
+        if (isLoading) {
+            // Tampilkan indikator loading jika sedang memuat
+            CircularProgressIndicator()
+        } else if (errorMessage.isNotEmpty()) {
+            // Tampilkan pesan error jika ada
+            Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
+        } else {
+            // Tampilkan pengumuman jika ada
+            announcements.forEach { announcement ->
+                SimpleAnnouncementItem(announcement = announcement)
+            }
         }
     }
 }
@@ -143,10 +194,49 @@ private fun FeatureButton(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun MainPagePreview() {
-    MaterialTheme {
-        MainPage(navController = NavHostController(LocalContext.current))
+fun SimpleAnnouncementItem(announcement: Announcement) {
+    val formattedDate = formatPublishedDate(announcement.publishedAt)
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        )
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = announcement.title,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF09090B)
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.CalendarToday,
+                    contentDescription = "Published Date",
+                    tint = Color(0xFF999999),
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = formattedDate,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = Color(0xFF999999)
+                    )
+                )
+            }
+        }
     }
 }
+

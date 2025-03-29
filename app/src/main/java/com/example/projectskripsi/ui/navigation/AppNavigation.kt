@@ -68,7 +68,7 @@ fun AppNavigation(
         }
 
         composable("main_page"){
-            MainPage(navController = navController, modifier = Modifier.fillMaxSize())
+            MainPage(navController = navController, viewModel = announcementViewModel, modifier = Modifier.fillMaxSize())
         }
 
         composable("login_screen"){
