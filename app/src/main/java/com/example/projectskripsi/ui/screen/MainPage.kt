@@ -46,6 +46,8 @@ import com.example.projectskripsi.data.model.Announcement
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projectskripsi.data.model.Student
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun MainPage(
@@ -127,32 +129,28 @@ fun MainPage(
             }
         }
 
-        Spacer(modifier = Modifier .height(24.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         // Display Students Header
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
+        Column (                modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)){
             Text(
-                text = "Daftar Siswa Terbaru",
+                text = "Siswa Terbaru",
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF09090B)
                 ),
-                modifier = Modifier.weight(1f)
             )
             Text(
-                text = "Lihat Semua Siswa",
+                text = "Daftar siswa yang baru bergabung",
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold
-                ),
-                modifier = Modifier.clickable { navController.navigate("student_list") }
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFF909096)
+                )
             )
         }
+
 
         // Tampilkan daftar siswa jika ada
         if (students.isEmpty()) {
@@ -240,7 +238,9 @@ fun SimpleAnnouncementItem(announcement: Announcement) {
 
 @Composable
 fun SimpleStudentItem(student: Student, navController: NavController) {
-    val formattedDate = formatPublishedDate(student.createdAt.toString())
+    // Format tanggal menjadi "dd/MM/yyyy"
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    val formattedDate = dateFormat.format(student.createdAt)
 
     Card(
         modifier = Modifier
@@ -255,31 +255,18 @@ fun SimpleStudentItem(student: Student, navController: NavController) {
         )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = student.name,
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF09090B) // Set text color to #09090B
-                )
-            )
-            Text(
-                text = "Kelas ${student.classRoomName}",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF909096)
-                )
-            )
-            Spacer(modifier = Modifier.height(4.dp))
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(
-                    imageVector = Icons.Filled.CalendarToday,
-                    contentDescription = "Created Date",
-                    tint = Color(0xFF999999),
-                    modifier = Modifier.size(16.dp)
+                Text(
+                    text = student.name,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF09090B) // Set text color to #09090B
+                    ),
+                    modifier = Modifier.weight(1f)
                 )
-                Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = formattedDate,
                     style = MaterialTheme.typography.bodyMedium.copy(
@@ -287,6 +274,13 @@ fun SimpleStudentItem(student: Student, navController: NavController) {
                     )
                 )
             }
+            Text(
+                text = "Kelas ${student.classRoomName}",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFF909096)
+                )
+            )
         }
     }
 }
