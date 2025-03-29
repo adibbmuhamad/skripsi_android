@@ -36,9 +36,15 @@ import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel, studentId: Int) {
+    // State untuk SwipeRefresh
+    var isRefreshing by remember { mutableStateOf(false) }
+
     LaunchedEffect(studentId) {
         viewModel.fetchStudentDetail(studentId)
     }
@@ -53,93 +59,100 @@ fun StudentDetailPage(navController: NavController, viewModel: StudentViewModel,
             )
         }
     ) { innerPadding ->
-        studentDetailResponse.value?.let { response ->
-            val student = response.student
-            Log.d("StudentDetailPage", "Displaying details for student: ${student.name}")
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isRefreshing),
+            onRefresh = {
+                isRefreshing = true
+                viewModel.fetchStudentDetail(studentId) // Memanggil ulang data detail siswa
+                isRefreshing = false // Setel kembali ke false setelah selesai
+            }
+        ) {
+            studentDetailResponse.value?.let { response ->
+                val student = response.student
+                Log.d("StudentDetailPage", "Displaying details for student: ${student.name}")
 
-            var selectedTabIndex by remember { mutableStateOf(0) }
-            val tabTitles = listOf("Prestasi", "Kehadiran", "Laporan Kesehatan", "Pelanggaran")
+                var selectedTabIndex by remember { mutableStateOf(0) }
+                val tabTitles = listOf("Prestasi", "Kehadiran", "Laporan Kesehatan", "Pelanggaran")
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFFF9FAFB)) // Set background color
-                    .padding(innerPadding)
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                        .fillMaxSize()
+                        .background(Color(0xFFF9FAFB)) // Set background color
+                        .padding(innerPadding)
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    InitialsAvatarDetailPage(name = student.name, modifier = Modifier.padding(end = 16.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = student.name,
-                            style = MaterialTheme.typography.titleLarge.copy(
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF09090B) // Set text color to #09090B
-                            )
-                        )
-                        Text(
-                            text = "Kelas ${student.classRoomName}",
-                            style = MaterialTheme.typography.bodyLarge.copy(
-                                fontWeight = FontWeight.SemiBold,
-                                color = Color(0xFF909096)
-                            )
-                        )
-                    }
-                }
-
-
-                // Custom scrollable tab row with reduced height
-                val scrollState = rememberScrollState()
-                Row(
-                    modifier = Modifier
-                        .horizontalScroll(scrollState)
-                        .fillMaxWidth()
-                ) {
-                    tabTitles.forEachIndexed { index, title ->
-                        Box(
-                            modifier = Modifier
-                                .padding(horizontal = 4.dp, vertical = 4.dp) // Reduced vertical padding
-                                .background(
-                                    color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else Color(0xFFF2F5F9),
-                                    shape = RoundedCornerShape(16.dp)
-                                )
-                                .clickable { selectedTabIndex = index }
-                                .padding(horizontal = 12.dp, vertical = 6.dp) // Padding inside the box
-                        ) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        InitialsAvatarDetailPage(name = student.name, modifier = Modifier.padding(end = 16.dp))
+                        Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = title,
-                                color = if (selectedTabIndex == index) Color.White else Color.Black,
-                                style = MaterialTheme.typography.bodyMedium.copy(
+                                text = student.name,
+                                style = MaterialTheme.typography.titleLarge.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF09090B) // Set text color to #09090B
+                                )
+                            )
+                            Text(
+                                text = "Kelas ${student.classRoomName}",
+                                style = MaterialTheme.typography.bodyLarge.copy(
                                     fontWeight = FontWeight.SemiBold,
+                                    color = Color(0xFF909096)
                                 )
                             )
                         }
                     }
-                }
 
+                    // Custom scrollable tab row with reduced height
+                    val scrollState = rememberScrollState()
+                    Row(
+                        modifier = Modifier
+                            .horizontalScroll(scrollState)
+                            .fillMaxWidth()
+                    ) {
+                        tabTitles.forEachIndexed { index, title ->
+                            Box(
+                                modifier = Modifier
+                                    .padding(horizontal = 4.dp, vertical = 4.dp) // Reduced vertical padding
+                                    .background(
+                                        color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else Color(0xFFF2F5F9),
+                                        shape = RoundedCornerShape(16.dp)
+                                    )
+                                    .clickable { selectedTabIndex = index }
+                                    .padding(horizontal = 12.dp, vertical = 6.dp) // Padding inside the box
+                            ) {
+                                Text(
+                                    text = title,
+                                    color = if (selectedTabIndex == index) Color.White else Color.Black,
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        fontWeight = FontWeight.SemiBold,
+                                    )
+                                )
+                            }
+                        }
+                    }
 
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = Color(0xFFF9FAFB) // Set background color to F9FAFB
-                ) {
-                    when (selectedTabIndex) {
-                        0 -> AchievementsContent(response.achievements.data)
-                        1 -> AttendancesContent(response.attendances.data)
-                        2 -> HealthReportsContent(response.healthReports.data)
-                        3 -> ViolationsContent(response.violations.data)
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = Color(0xFFF9FAFB) // Set background color to F9FAFB
+                    ) {
+                        when (selectedTabIndex) {
+                            0 -> AchievementsContent(response.achievements.data)
+                            1 -> AttendancesContent(response.attendances.data)
+                            2 -> HealthReportsContent (response.healthReports.data)
+                            3 -> ViolationsContent(response.violations.data)
+                        }
                     }
                 }
-            }
-        } ?: run {
-            Log.d("StudentDetailPage", "Student detail is null")
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+            } ?: run {
+                Log.d("StudentDetailPage", "Student detail is null")
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
             }
         }
     }
