@@ -51,6 +51,7 @@ import java.util.Locale
 
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Divider
 
 @Composable
 fun MainPage(
@@ -81,6 +82,14 @@ fun MainPage(
             .padding(16.dp)
     ) {
         // Display Announcements Header
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), // Menambahkan elevasi
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF)) // Set background color to white
+        ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -128,16 +137,27 @@ fun MainPage(
             } else {
                 // Tampilkan pengumuman jika ada
                 Column {
-                    announcements.take(5).forEach { announcement -> // Batasi hanya 5 pengumuman
+                    announcements
+                        .sortedByDescending { it.publishedAt } // Urutkan berdasarkan tanggal terbaru
+                        .take(5)
+                        .forEach { announcement -> // Batasi hanya 5 pengumuman
                         SimpleAnnouncementItem(announcement = announcement)
                     }
                 }
             }
-        }
+        }}
 
         Spacer(modifier = Modifier.height(24.dp))
 
         // Display Students Header
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), // Menambahkan elevasi
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF)) // Set background color to white
+        ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -167,12 +187,15 @@ fun MainPage(
                 }
             } else {
                 Column {
-                    students.sortedByDescending { it.createdAt }.take(5).forEach { student -> // Urutkan dan batasi hanya 5 siswa
+                    students
+                        .sortedByDescending { it.createdAt }
+                        .take(5)
+                        .forEach { student -> // Urutkan dan batasi hanya 5 siswa
                         SimpleStudentItem(student = student, navController = navController)
                     }
                 }
             }
-        }
+        }}
     }
 }
 @Composable
@@ -235,10 +258,18 @@ fun SimpleAnnouncementItem(announcement: Announcement) {
                 Text(
                     text = formattedDate,
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = Color(0xFF999999)
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF909096)
                     )
                 )
             }
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                thickness = 1.dp,
+                color = Color(0xFFD9D9D9)
+            )
         }
     }
 }
