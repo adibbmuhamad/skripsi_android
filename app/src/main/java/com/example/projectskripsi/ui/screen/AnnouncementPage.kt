@@ -30,6 +30,9 @@ import java.util.Locale
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.example.projectskripsi.ui.component.CustomAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,34 +51,18 @@ fun AnnouncementPage(navController: NavController, viewModel: AnnouncementViewMo
 
     Scaffold(
         topBar = {
-            Surface(
-                shadowElevation = 4.dp,
-                color = Color(0xFFFFFFFF) // Set background color to white
-            ) {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = "Pengumuman",
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF09090B) // Set text color to #09090B
-                            )
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "Back", tint = MaterialTheme.colorScheme.primary)
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.Transparent // Set to transparent to show the Surface color
-                    )
-                )
-            }
+            CustomAppBar(
+                title = "Pengumuman",
+                onBackClick = { navController.popBackStack() }
+            )
         },
         containerColor = Color(0xFFF9FAFB)
     ) { innerPadding ->
-        Column(modifier = modifier.padding(innerPadding).padding(16.dp).background(Color(0xFFF9FAFB))) {
+        Column(modifier = modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+            .padding(horizontal = 16.dp)
+            .background(Color(0xFFF9FAFB))) {
             if (isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
@@ -106,8 +93,6 @@ fun AnnouncementPage(navController: NavController, viewModel: AnnouncementViewMo
                     )
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
-
                 // Tab Row for categories
                 val scrollState = rememberScrollState()
                 Row(
@@ -121,7 +106,9 @@ fun AnnouncementPage(navController: NavController, viewModel: AnnouncementViewMo
                             modifier = Modifier
                                 .padding(horizontal = 4.dp, vertical = 4.dp)
                                 .background(
-                                    color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else Color(0xFFF2F5F9),
+                                    color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else Color(
+                                        0xFFF2F5F9
+                                    ),
                                     shape = RoundedCornerShape(16.dp)
                                 )
                                 .clickable { selectedTabIndex = index }
@@ -198,7 +185,10 @@ fun AnnouncementItem(announcement: Announcement, navController: NavController) {
                 )
                 Box(
                     modifier = Modifier
-                        .background(getCategoryBackgroundColor(announcement.category), RoundedCornerShape(8.dp))
+                        .background(
+                            getCategoryBackgroundColor(announcement.category),
+                            RoundedCornerShape(8.dp)
+                        )
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 ) {
                     Text(
@@ -278,4 +268,12 @@ fun getCategoryTextColor(category: String): Color {
         "event" -> Color(0xFF388E3C)
         else -> Color(0xFF666666)
     }
+}
+
+@Preview
+@Composable
+private fun AnnoucementPagePreview() {
+    AnnouncementPage(navController = rememberNavController(), viewModel = AnnouncementViewModel())
+
+
 }
