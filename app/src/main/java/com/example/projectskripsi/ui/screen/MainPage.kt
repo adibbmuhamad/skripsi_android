@@ -87,7 +87,7 @@ fun MainPage(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp), // Menambahkan elevasi
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), // Menambahkan elevasi
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF)) // Set background color to white
         ) {
@@ -191,8 +191,6 @@ fun MainPage(
                 }
             }
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
 
         // Display Students Header
         Card(
