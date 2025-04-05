@@ -1,6 +1,7 @@
 package com.example.projectskripsi.ui.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,13 +11,18 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.projectskripsi.data.model.Classrooms
+import com.example.projectskripsi.ui.component.CustomAppBar
 
-@OptIn(ExperimentalMaterial3Api::class)
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+
 @Composable
 fun ClassroomListPage(
     modifier: Modifier = Modifier,
@@ -26,6 +32,7 @@ fun ClassroomListPage(
     var classrooms by remember { mutableStateOf<List<Classrooms>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf("") }
+    var isRefreshing by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.getClassrooms()
@@ -38,8 +45,9 @@ fun ClassroomListPage(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Classrooms") },
+            CustomAppBar(
+                title = "Ruang Kelas",
+                onBackClick = { navController.popBackStack() }
             )
         },
         content = { paddingValues ->
@@ -47,7 +55,7 @@ fun ClassroomListPage(
                 modifier = modifier
                     .fillMaxSize()
                     .padding(paddingValues)
-                    .background(MaterialTheme.colorScheme.background)
+                    .background(Color(0xFFF9FAFB)) // Set background color
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -58,12 +66,21 @@ fun ClassroomListPage(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 } else {
-                    LazyColumn(
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    SwipeRefresh(
+                        state = rememberSwipeRefreshState(isRefreshing),
+                        onRefresh = {
+                            isRefreshing = true
+                            viewModel.getClassrooms()
+                            isRefreshing = false
+                        }
                     ) {
-                        items(classrooms) { classroom ->
-                            ClassroomItem(classroom = classroom)
+                        LazyColumn(
+                            contentPadding = PaddingValues(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(classrooms) { classroom ->
+                                ClassroomItem(classroom = classroom)
+                            }
                         }
                     }
                 }
@@ -76,12 +93,13 @@ fun ClassroomListPage(
 fun ClassroomItem(classroom: Classrooms) {
     Card(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .clickable { /* Handle click */ }, // Add click feedback
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onSurface
+            containerColor = Color(0xFFFFFFFF)
         ),
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(1.dp)
     ) {
         Row(
             modifier = Modifier
@@ -99,23 +117,32 @@ fun ClassroomItem(classroom: Classrooms) {
             Column {
                 Text(
                     text = classroom.name,
-                    style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp),
-                    color = MaterialTheme.colorScheme.onSurface
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF09090B)
+                    )
                 )
                 Text(
                     text = "Room: ${classroom.roomNumber}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF909096)
+                    )
                 )
                 Text(
-                    text = "Capacity: ${classroom.capacity}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    text = "Capacity : ${classroom.capacity}",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF909096)
+                    )
                 )
                 Text(
                     text = "Teacher: ${classroom.classTeacher}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF909096)
+                    )
                 )
             }
         }
