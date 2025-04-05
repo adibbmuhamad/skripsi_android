@@ -122,7 +122,7 @@ fun AppNavigation(
         }
 
         // Tambahkan rute untuk halaman daftar kelas
-        composable("classroom_list") {
+        composable("classroom_list_page") {
             ClassroomListPage(navController = navController, modifier = Modifier.fillMaxSize())
         }
     }
