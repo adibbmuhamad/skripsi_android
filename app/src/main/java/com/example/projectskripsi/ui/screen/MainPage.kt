@@ -127,8 +127,7 @@ fun MainPage(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp)
-                .clickable { navController.navigate("classroom_list_page") },
+                .padding(vertical = 8.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), // Menambahkan elevasi
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF)) // Set background color to white
