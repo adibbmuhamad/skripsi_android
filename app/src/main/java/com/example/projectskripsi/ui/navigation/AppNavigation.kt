@@ -18,6 +18,7 @@ import com.example.projectskripsi.ui.screen.AnnouncementDetailViewModel
 import com.example.projectskripsi.ui.screen.AnnouncementPage
 import com.example.projectskripsi.ui.screen.AnnouncementViewModel
 import com.example.projectskripsi.ui.screen.AttendancePage
+import com.example.projectskripsi.ui.screen.ClassroomListPage
 import com.example.projectskripsi.ui.screen.HealthReportPage
 import com.example.projectskripsi.ui.screen.LoginPage
 import com.example.projectskripsi.ui.screen.MainPage
@@ -46,7 +47,7 @@ fun AppNavigation(
             BottomNavigationBar(navController = navController)
         }
     ) { innerPadding ->
-    NavHost(navController = navController, startDestination = "main_page", modifier = Modifier.padding(innerPadding)) {
+    NavHost(navController = navController, startDestination = "classroom_list", modifier = Modifier.padding(innerPadding)) {
         composable("splash_screen") {
             SplashScreen(navController = navController)
         }
@@ -118,6 +119,11 @@ fun AppNavigation(
 
         composable("notification_page"){
             NotificationPage(navController = navController, modifier = Modifier.fillMaxSize())
+        }
+
+        // Tambahkan rute untuk halaman daftar kelas
+        composable("classroom_list") {
+            ClassroomListPage(navController = navController, modifier = Modifier.fillMaxSize())
         }
     }
 }}
