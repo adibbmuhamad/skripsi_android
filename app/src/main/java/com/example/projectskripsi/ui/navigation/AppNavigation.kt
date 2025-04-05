@@ -47,7 +47,7 @@ fun AppNavigation(
             BottomNavigationBar(navController = navController)
         }
     ) { innerPadding ->
-    NavHost(navController = navController, startDestination = "classroom_list", modifier = Modifier.padding(innerPadding)) {
+    NavHost(navController = navController, startDestination = "main_page", modifier = Modifier.padding(innerPadding)) {
         composable("splash_screen") {
             SplashScreen(navController = navController)
         }

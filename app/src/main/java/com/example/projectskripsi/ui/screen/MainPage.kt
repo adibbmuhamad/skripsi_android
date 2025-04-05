@@ -59,6 +59,7 @@ fun MainPage(
     navController: NavController,
     viewModel: AnnouncementViewModel = viewModel(),
     studentViewModel: StudentViewModel = viewModel(),
+    classroomViewModel: ClassroomViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
     // Mengamati perubahan pada daftar pengumuman
@@ -69,10 +70,14 @@ fun MainPage(
     // Mengamati perubahan pada daftar siswa
     val students by studentViewModel.students.collectAsState()
 
-    // Memanggil getAnnouncements dan fetchStudents saat MainPage dimuat
+    // Mengamati perubahan pada daftar kelas
+    val classrooms by classroomViewModel.classrooms.collectAsState()
+
+    // Memanggil getAnnouncements, fetchStudents, dan getClassrooms saat MainPage dimuat
     LaunchedEffect(Unit) {
         viewModel.getAnnouncements()
         studentViewModel.fetchStudents()
+        classroomViewModel.getClassrooms()
     }
 
     Column(
@@ -116,6 +121,49 @@ fun MainPage(
                 }
                 Text(
                     text = "${students.size}", // Menampilkan jumlah siswa
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF09090B)
+                    ),
+                    modifier = Modifier.padding(start = 4.dp)
+                )
+            }
+        }
+
+        // Kartu untuk menampilkan total jumlah kelas
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), // Menambahkan elevasi
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF)) // Set background color to white
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(), // Pastikan Row mengisi lebar penuh
+                    verticalAlignment = Alignment.CenterVertically, // Menyelaraskan elemen secara vertikal
+                    horizontalArrangement = Arrangement.Start // Mengatur elemen dari kiri
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.School, // Ganti dengan ikon yang sesuai
+                        contentDescription = "Total Kelas",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp)) // Menambahkan sedikit ruang antara ikon dan teks
+                    Text(
+                        text = "Total Kelas",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = Color (0xFF09090B)
+                        )
+                    )
+                }
+                Text(
+                    text = "${classrooms.size}", // Menampilkan jumlah kelas
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF09090B)

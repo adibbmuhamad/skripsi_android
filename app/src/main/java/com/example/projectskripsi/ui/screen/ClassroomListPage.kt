@@ -19,7 +19,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.projectskripsi.data.model.Classrooms
 import com.example.projectskripsi.ui.component.CustomAppBar
-
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
@@ -29,19 +28,15 @@ fun ClassroomListPage(
     viewModel: ClassroomViewModel = viewModel(),
     navController: NavController
 ) {
-    var classrooms by remember { mutableStateOf<List<Classrooms>>(emptyList()) }
-    var isLoading by remember { mutableStateOf(true) }
-    var errorMessage by remember { mutableStateOf("") }
-    var isRefreshing by remember { mutableStateOf(false) }
+    // Mengamati perubahan pada state dari ViewModel
+    val classrooms by viewModel.classrooms.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+    val isRefreshing by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.getClassrooms()
     }
-
-    // Observe changes in the ViewModel's state
-    classrooms = viewModel.classrooms
-    isLoading = viewModel.isLoading.value
-    errorMessage = viewModel.errorMessage.value
 
     Scaffold(
         topBar = {
@@ -57,23 +52,21 @@ fun ClassroomListPage(
                     .padding(paddingValues)
                     .background(Color(0xFFF9FAFB)) // Set background color
             ) {
-                if (isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                } else if (errorMessage.isNotEmpty()) {
-                    Text(
-                        text = errorMessage,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                } else {
-                    SwipeRefresh(
-                        state = rememberSwipeRefreshState(isRefreshing),
-                        onRefresh = {
-                            isRefreshing = true
-                            viewModel.getClassrooms()
-                            isRefreshing = false
-                        }
-                    ) {
+                SwipeRefresh(
+                    state = rememberSwipeRefreshState(isRefreshing),
+                    onRefresh = {
+                        viewModel.getClassrooms()
+                    }
+                ) {
+                    if (isLoading) {
+                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                    } else if (errorMessage.isNotEmpty()) {
+                        Text(
+                            text = errorMessage,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    } else {
                         LazyColumn(
                             contentPadding = PaddingValues(16.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -131,7 +124,7 @@ fun ClassroomItem(classroom: Classrooms) {
                     )
                 )
                 Text(
-                    text = "Capacity : ${classroom.capacity}",
+                    text = "Capacity: ${classroom.capacity}",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF909096)
