@@ -51,6 +51,7 @@ import java.util.Locale
 
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.outlined.MeetingRoom
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material3.Divider
 
@@ -149,7 +150,7 @@ fun MainPage(
                     horizontalArrangement = Arrangement.Start // Mengatur elemen dari kiri
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.School, // Ganti dengan ikon yang sesuai
+                        imageVector = Icons.Outlined.MeetingRoom, // Ganti dengan ikon yang sesuai
                         contentDescription = "Total Kelas",
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(24.dp)
