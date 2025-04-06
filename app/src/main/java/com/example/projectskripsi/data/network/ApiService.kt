@@ -1,5 +1,6 @@
 package com.example.projectskripsi.data.network
 
+import com.example.projectskripsi.data.model.AchievementResponse
 import com.example.projectskripsi.data.model.AnnouncementDetailResponse
 import com.example.projectskripsi.data.model.AnnouncementResponse
 import com.example.projectskripsi.data.model.ClassroomsResponse
@@ -28,5 +29,10 @@ interface ApiService {
     // Mendapatkan daftar kelas
     @GET("api/classrooms")
     suspend fun getClassrooms(): Response<ClassroomsResponse>
+
+    // Mendapatkan daftar pencapaian
+    @GET("api/achievements")
+    suspend fun getAchievements(): Response<AchievementResponse>
+
 
 }

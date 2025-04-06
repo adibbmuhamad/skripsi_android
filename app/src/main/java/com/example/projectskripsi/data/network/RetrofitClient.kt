@@ -1,5 +1,6 @@
 package com.example.projectskripsi.data.network
 
+import com.example.projectskripsi.ui.component.CustomDateTypeAdapter
 import com.example.projectskripsi.ui.component.CustomTimeTypeAdapter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -7,11 +8,12 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.sql.Date
 import java.sql.Time
 
 object RetrofitClient {
 
-    private const val BASE_URL = "http://192.168.30.69:8000/" // Replace with the correct API URL
+    private const val BASE_URL = "http://192.168.1.16:8000/" // Replace with the correct API URL
 
     // Create an instance of HttpLoggingInterceptor
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
@@ -26,6 +28,7 @@ object RetrofitClient {
     // Create a custom Gson instance with the TimeTypeAdapter
     private val gson: Gson = GsonBuilder()
         .registerTypeAdapter(Time::class.java, CustomTimeTypeAdapter())
+        .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
         .create()
 
     // Create an instance of Retrofit with the configured OkHttpClient and Gson

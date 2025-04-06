@@ -12,7 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.projectskripsi.ui.screen.AchievementPage
+import com.example.projectskripsi.ui.screen.AchievementListPage
 import com.example.projectskripsi.ui.screen.AnnouncementDetailPage
 import com.example.projectskripsi.ui.screen.AnnouncementDetailViewModel
 import com.example.projectskripsi.ui.screen.AnnouncementPage
@@ -47,7 +47,7 @@ fun AppNavigation(
             BottomNavigationBar(navController = navController)
         }
     ) { innerPadding ->
-    NavHost(navController = navController, startDestination = "main_page", modifier = Modifier.padding(innerPadding)) {
+    NavHost(navController = navController, startDestination = "achievement_page", modifier = Modifier.padding(innerPadding)) {
         composable("splash_screen") {
             SplashScreen(navController = navController)
         }
@@ -77,7 +77,7 @@ fun AppNavigation(
         }
 
         composable("achievement_page"){
-            AchievementPage(navController = navController, modifier = Modifier.fillMaxSize())
+            AchievementListPage(navController = navController, modifier = Modifier.fillMaxSize())
         }
 
         composable("announcement_page") {
