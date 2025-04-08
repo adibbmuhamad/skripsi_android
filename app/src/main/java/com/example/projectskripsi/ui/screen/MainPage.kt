@@ -38,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -54,7 +55,7 @@ fun MainPage(
     viewModel: AnnouncementViewModel = viewModel(),
     studentViewModel: StudentViewModel = viewModel(),
     classroomViewModel: ClassroomViewModel = viewModel(),
-    achievementViewModel: AchievementViewModel = viewModel(), // Tambahkan ViewModel untuk pencapaian
+    achievementViewModel: AchievementViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
     // Mengamati perubahan pada daftar pengumuman
@@ -76,263 +77,232 @@ fun MainPage(
         viewModel.getAnnouncements()
         studentViewModel.fetchStudents()
         classroomViewModel.getClassrooms()
-        achievementViewModel.getAchievements() // Panggil untuk mendapatkan pencapaian
+        achievementViewModel.getAchievements()
     }
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState()) // Menambahkan scroll vertikal
-            .background(Color(0xFFF9FAFB)) // Set background color
+            .verticalScroll(rememberScrollState())
+            .background(Color(0xFFF9FAFB))
             .padding(16.dp)
     ) {
-        // Kartu untuk menampilkan total jumlah siswa
+        // Grid layout 2x2 untuk kartu statistik
+        Column(modifier = Modifier.fillMaxWidth()) {
+            // Baris pertama dengan 2 kartu
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                // Kartu Total Siswa
+                StatisticCard(
+                    icon = Icons.Outlined.School,
+                    title = "Total Siswa",
+                    value = "${students.size}",
+                    modifier = Modifier.weight(1f),
+                    onClick = {}
+                )
+
+                // Kartu Total Kelas
+                StatisticCard(
+                    icon = Icons.Outlined.MeetingRoom,
+                    title = "Kelas",
+                    value = "${classrooms.size}",
+                    modifier = Modifier.weight(1f),
+                    onClick = { navController.navigate("classroom_list_page") }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Baris kedua dengan 2 kartu
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                // Kartu Total Pencapaian
+                StatisticCard(
+                    icon = Icons.Outlined.Star,
+                    title = "Pencapaian",
+                    value = "${achievements.size}",
+                    modifier = Modifier.weight(1f),
+                    onClick = { navController.navigate("achievement_page") }
+                )
+
+                // Kartu Total Pengumuman
+                StatisticCard(
+                    icon = Icons.Outlined.CalendarMonth,
+                    title = "Pengumuman",
+                    value = "${announcements.size}",
+                    modifier = Modifier.weight(1f),
+                    onClick = {}
+                )
+            }
+        }
+
+        // Display Announcements Header
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), // Menambahkan elevasi
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF)) // Set background color to white
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF))
         ) {
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFFFFFFFF), shape = RoundedCornerShape(16.dp))
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(), // Pastikan Row mengisi lebar penuh
-                    verticalAlignment = Alignment.CenterVertically, // Menyelaraskan elemen secara vertikal
-                    horizontalArrangement = Arrangement.Start // Mengatur elemen dari kiri
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp, horizontal = 16.dp)
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.School, // Ganti dengan ikon yang sesuai
+                        imageVector = Icons.Outlined.CalendarMonth,
                         contentDescription = "Pengumuman",
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(24.dp)
                     )
-                    Spacer(modifier = Modifier.width(8.dp)) // Menambahkan sedikit ruang antara ikon dan teks
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Total Siswa",
+                        text = "Pengumuman",
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFF09090B)
-                        )
+                        ),
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        text = "Tampilkan Semua",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.SemiBold
+                        ),
+                        modifier = Modifier.clickable { navController.navigate("announcement_page") }
                     )
                 }
-                Text(
-                    text = "${students.size}", // Menampilkan jumlah siswa
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF09090B)
-                    ),
-                    modifier = Modifier.padding(start = 4.dp)
-                )
+
+                if (isLoading) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                } else if (errorMessage.isNotEmpty()) {
+                    Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
+                } else {
+                    Column {
+                        announcements
+                            .sortedByDescending { it.publishedAt }
+                            .take(5)
+                            .forEach { announcement ->
+                                SimpleAnnouncementItem(announcement = announcement)
+                            }
+                    }
+                }
             }
         }
 
-        // Kartu untuk menampilkan total jumlah kelas
+        // Display Students Header
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp)
-                .clickable { navController.navigate("classroom_list_page") },
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), // Menambahkan elevasi
+                .padding(vertical = 8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF)) // Set background color to white
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF))
         ) {
             Column(
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(), // Pastikan Row mengisi lebar penuh
-                    verticalAlignment = Alignment.CenterVertically, // Menyelaraskan elemen secara vertikal
-                    horizontalArrangement = Arrangement.Start // Mengatur elemen dari kiri
-                ){
-                Icon(
-                        imageVector = Icons.Outlined.MeetingRoom, // Ganti dengan ikon yang sesuai
-                contentDescription = "Total Kelas",
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp)) // Menambahkan sedikit ruang antara ikon dan teks
-                Text(
-                    text = "Total Kelas",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF09090B)
-                    )
-                )
-            }
-            Text(
-                text = "${classrooms.size}", // Menampilkan jumlah kelas
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF09090B)
-                ),
-                modifier = Modifier.padding(start = 4.dp)
-            )
-        }
-    }
-
-    // Kartu untuk menampilkan total jumlah pencapaian
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable { navController.navigate("achievement_page") },
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), // Menambahkan elevasi
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF)) // Set background color to white
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(), // Pastikan Row mengisi lebar penuh
-                verticalAlignment = Alignment.CenterVertically, // Menyelaraskan elemen secara vertikal
-                horizontalArrangement = Arrangement.Start // Mengatur elemen dari kiri
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Star, // Ganti dengan ikon yang sesuai
-                    contentDescription = "Total Pencapaian",
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp)) // Menambahkan sedikit ruang antara ikon dan teks
-                Text(
-                    text = "Total Pencapaian",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF09090B)
-                    )
-                )
-            }
-            Text(
-                text = "${achievements.size}", // Menampilkan jumlah pencapaian
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF09090B)
-                ),
-                modifier = Modifier.padding(start = 4.dp)
-            )
-        }
-    }
-
-    // Display Announcements Header
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), // Menambahkan elevasi
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF)) // Set background color to white
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color(0xFFFFFFFF), shape = RoundedCornerShape(16.dp))
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp, horizontal = 16.dp)
+                    .background(Color(0xFFFFFFFF), shape = RoundedCornerShape(16.dp))
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.CalendarMonth, // Ganti dengan ikon yang sesuai
-                    contentDescription = "Pengumuman",
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Pengumuman",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF09090B)
-                    ),
-                    modifier = Modifier.weight(1f)
-                )
-                Text(
-                    text = "Tampilkan Semua",
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.SemiBold
-                    ),
-                    modifier = Modifier.clickable { navController.navigate("announcement_page") }
-                )
-            }
-
-            if (isLoading) {
-                // Tampilkan indikator loading jika sedang memuat
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
-            } else if (errorMessage.isNotEmpty()) {
-                // Tampilkan pesan error jika ada
-                Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
-            } else {
-                // Tampilkan pengumuman jika ada
-                Column {
-                    announcements
-                        .sortedByDescending { it.publishedAt } // Urutkan berdasarkan tanggal terbaru
-                        .take(5)
-                        .forEach { announcement -> // Batasi hanya 5 pengumuman
-                            SimpleAnnouncementItem(announcement = announcement)
-                        }
-                }
-            }
-        }
-    }
-
-    // Display Students Header
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), // Menambahkan elevasi
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF)) // Set background color to white
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color(0xFFFFFFFF), shape = RoundedCornerShape(16.dp))
-        ) {
-            Column(Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
-                Text(
-                    text = "Siswa Terbaru",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF09090B)
-                    ),
-                )
-                Text(
-                    text = "Daftar siswa yang baru bergabung",
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color(0xFF909096)
+                Column(Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
+                    Text(
+                        text = "Siswa Terbaru",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF09090B)
+                        ),
                     )
-                )
-            }
-
-            // Tampilkan daftar siswa jika ada
-            if (students.isEmpty()) {
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    Text("Tidak ada siswa tersedia", color = Color.Gray)
+                    Text(
+                        text = "Daftar siswa yang baru bergabung",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFF909096)
+                        )
+                    )
                 }
-            } else {
-                Column {
-                    students
-                        .sortedByDescending { it.createdAt }
-                        .take(5)
-                        .forEach { student -> // Urutkan dan batasi hanya 5 siswa
-                            SimpleStudentItem(student = student, navController = navController)
-                        }
+
+                if (students.isEmpty()) {
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        Text("Tidak ada siswa tersedia", color = Color.Gray)
+                    }
+                } else {
+                    Column {
+                        students
+                            .sortedByDescending { it.createdAt }
+                            .take(5)
+                            .forEach { student ->
+                                SimpleStudentItem(student = student, navController = navController)
+                            }
+                    }
                 }
             }
         }
     }
 }
+
+@Composable
+fun StatisticCard(
+    icon: ImageVector,
+    title: String,
+    value: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = modifier
+            .padding(vertical = 4.dp)
+            .clickable(onClick = onClick),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF))
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = title,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF09090B)
+                    )
+                )
+            }
+            Text(
+                text = value,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF09090B)
+                ),
+                modifier = Modifier.padding(start = 4.dp, top = 4.dp)
+            )
+        }
+    }
 }
 @Composable
 fun SimpleAnnouncementItem(announcement: Announcement) {
