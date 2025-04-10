@@ -80,7 +80,7 @@ fun AppNavigation(
             }
         }
     ) { innerPadding ->
-        NavHost(navController = navController, startDestination = "login_screen", modifier = Modifier.padding(innerPadding)) {
+        NavHost(navController = navController, startDestination = "splash_screen", modifier = Modifier.padding(innerPadding)) {
             composable("splash_screen") {
                 SplashScreen(navController = navController)
             }
