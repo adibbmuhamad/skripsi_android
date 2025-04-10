@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "682602984076",
+    "project_id": "ortuconnect",
+    "storage_bucket": "ortuconnect.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:682602984076:android:84371d3cb1bef5f98041a9",
+        "android_client_info": {
+          "package_name": "com.example.projectskripsi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "682602984076-3oiulvb9hls1p9d0jidcg9vctrvmtvl4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.projectskripsi",
+            "certificate_hash": "a07203cac4a089aba4f5a69368152fe1e78f417b"
+          }
+        },
+        {
+          "client_id": "682602984076-pfkuauoi447h0ueh9io0pt2aet1gki4a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNCNn4teJd9fZvtNGNipVLjWQLo5ssjtI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "682602984076-pfkuauoi447h0ueh9io0pt2aet1gki4a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

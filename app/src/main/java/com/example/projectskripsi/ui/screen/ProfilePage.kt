@@ -9,15 +9,6 @@ import androidx.compose.ui.tooling.preview.Preview
 
 
 @Composable
-fun ProfilePage(navController: NavController, modifier: Modifier = Modifier) {
-
-}
-
-@Preview
-@Composable
-private fun ProfilePagePreview() {
-    ProfilePage(navController = NavHostController(LocalContext.current))
-
-
+fun ProfilePage(navController: NavController, modifier: Modifier = Modifier, authViewModel: AuthViewModel) {
 
 }

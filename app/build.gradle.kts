@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -91,4 +92,11 @@ dependencies {
     
     //swipe refresh
     implementation("com.google.accompanist:accompanist-swiperefresh:0.24.13-rc")
+
+    // Google Sign-In SDK
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+
+    // Firebase Authentication (jika Anda juga ingin mengintegrasikan dengan Firebase)
+    implementation("com.google.firebase:firebase-auth-ktx:22.3.0")
+    implementation("com.google.firebase:firebase-bom:32.7.0")
 }
