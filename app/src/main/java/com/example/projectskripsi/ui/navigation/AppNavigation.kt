@@ -10,6 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -160,7 +161,7 @@ fun AppNavigation(
             }
 
             composable("notification_page"){
-                NotificationPage(navController = navController, modifier = Modifier.fillMaxSize())
+                NotificationPage(navController = navController, modifier = Modifier.fillMaxSize(), notificationViewModel = viewModel())
             }
 
             // Tambahkan rute untuk halaman daftar kelas
