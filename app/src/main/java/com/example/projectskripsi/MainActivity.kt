@@ -27,6 +27,7 @@ import com.example.projectskripsi.ui.navigation.AppNavigation
 import com.example.projectskripsi.ui.screen.AnnouncementPage
 import com.example.projectskripsi.ui.screen.AnnouncementViewModel
 import com.example.projectskripsi.ui.screen.AuthViewModel
+import com.example.projectskripsi.ui.screen.NotificationNavigationViewModel
 import com.example.projectskripsi.ui.screen.StudentViewModel
 import com.example.projectskripsi.ui.theme.ProjectSkripsiTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -45,6 +46,8 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var signInLauncher: ActivityResultLauncher<Intent>
+    private val navigationViewModel: NotificationNavigationViewModel by viewModels()
+
 
     // Launcher untuk permission notifikasi
     private val requestPermissionLauncher = registerForActivityResult(
@@ -87,6 +90,11 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        // Cek intent
+        if (intent?.getBooleanExtra("openNotifications", false) == true) {
+            navigationViewModel.navigateToNotifications()
+        }
+
         // Cek Google Play Services
         checkGooglePlayServices()
 
@@ -102,7 +110,8 @@ class MainActivity : ComponentActivity() {
                     announcementViewModel = announcementViewModel,
                     studentViewModel = studentViewModel,
                     authViewModel = authViewModel,
-                    onGoogleSignInClicked = { startGoogleSignIn() }
+                    onGoogleSignInClicked = { startGoogleSignIn() },
+                    navigationViewModel = navigationViewModel
                 )
             }
         }

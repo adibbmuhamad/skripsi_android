@@ -28,6 +28,7 @@ import com.example.projectskripsi.ui.screen.ClassroomListPage
 import com.example.projectskripsi.ui.screen.HealthReportPage
 import com.example.projectskripsi.ui.screen.LoginPage
 import com.example.projectskripsi.ui.screen.MainPage
+import com.example.projectskripsi.ui.screen.NotificationNavigationViewModel
 import com.example.projectskripsi.ui.screen.NotificationPage
 import com.example.projectskripsi.ui.screen.OnBoarding1Page
 import com.example.projectskripsi.ui.screen.OnBoarding2Page
@@ -47,10 +48,12 @@ fun AppNavigation(
     announcementViewModel: AnnouncementViewModel,
     studentViewModel: StudentViewModel,
     authViewModel: AuthViewModel,
-    onGoogleSignInClicked: () -> Unit
+    onGoogleSignInClicked: () -> Unit,
+    navigationViewModel: NotificationNavigationViewModel
 ) {
     val navController = rememberNavController()
     val authState by authViewModel.authState.collectAsState()
+    val shouldNavigateToNotifications by navigationViewModel.shouldNavigateToNotifications.collectAsState()
 
     // Efek untuk memeriksa status autentikasi dan navigasi ke halaman yang sesuai
     LaunchedEffect(authState) {
@@ -70,6 +73,13 @@ fun AppNavigation(
                 }
             }
             else -> {} // Tidak melakukan apa-apa untuk status lainnya
+        }
+    }
+
+    LaunchedEffect(shouldNavigateToNotifications) {
+        if (shouldNavigateToNotifications) {
+            navController.navigate("notification_page")
+            navigationViewModel.navigationComplete()
         }
     }
 
