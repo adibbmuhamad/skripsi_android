@@ -1,11 +1,12 @@
 package com.example.projectskripsi.ui.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Person
@@ -16,37 +17,51 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfilePage(navController: NavController, modifier: Modifier = Modifier, authViewModel: AuthViewModel) {
     val user by authViewModel.user.collectAsState()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Profil Pengguna") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Kembali")
-                    }
-                }
-            )
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color(0xFFF9FAFB)) // Set background color
+    ) {
+        // Top Bar
+        Surface(
+            shadowElevation = 4.dp,
+            color = Color(0xFFFFFFFF) // Set background color to white
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Profil",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF09090B) // Set text color to #09090B
+                    )
+                )
+            }
         }
-    ) { paddingValues ->
+
+        // Profile content
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -86,7 +101,8 @@ fun ProfilePage(navController: NavController, modifier: Modifier = Modifier, aut
             Text(
                 text = user?.name ?: "Nama tidak tersedia",
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF09090B) // Set text color to #09090B
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -112,9 +128,13 @@ fun ProfilePage(navController: NavController, modifier: Modifier = Modifier, aut
             Spacer(modifier = Modifier.height(32.dp))
 
             // User information cards
-            ElevatedCard(
+            Card(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+                elevation = CardDefaults.cardElevation(1.dp),
+                shape = RoundedCornerShape(8.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White // Set background color to white
+                )
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp)
@@ -177,11 +197,4 @@ fun ProfileInfoItem(title: String, value: String) {
         Spacer(modifier = Modifier.height(8.dp))
         Divider()
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ProfilePagePreview() {
-    // Preview tidak dapat menampilkan data sebenarnya karena memerlukan ViewModel
-    // Gunakan data dummy untuk preview
 }
