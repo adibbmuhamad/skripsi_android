@@ -10,10 +10,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.google.accompanist.insets.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
@@ -32,6 +36,9 @@ fun BottomNavigationBar(navController: NavHostController) {
 
     if (shouldShowBottomBar) {
         BottomNavigation(
+            modifier = Modifier
+                .navigationBarsPadding() // Padding untuk navigasi sistem
+                .padding(bottom = 16.dp), // Padding tambahan
             backgroundColor = Color(0xFFF9FAFB),
             contentColor = MaterialTheme.colorScheme.primary
         ) {

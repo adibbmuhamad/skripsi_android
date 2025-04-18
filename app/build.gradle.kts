@@ -106,4 +106,7 @@ dependencies {
 
     implementation("androidx.compose.foundation:foundation:1.5.0")
 
+    //tinggi navigasi dinamis
+    implementation("com.google.accompanist:accompanist-insets:0.30.1")
+
 }
