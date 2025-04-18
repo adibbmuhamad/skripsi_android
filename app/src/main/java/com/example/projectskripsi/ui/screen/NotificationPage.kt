@@ -152,7 +152,12 @@ fun NotificationCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            // Ubah warna latar belakang berdasarkan status isRead
+            containerColor = if (!notification.isRead) {
+                Color(0xFF2196F3) // Warna biru untuk notifikasi belum dibaca
+            } else {
+                Color.White // Warna putih untuk notifikasi yang sudah dibaca
+            }
         )
     ) {
         Row(
@@ -161,19 +166,17 @@ fun NotificationCard(
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (!notification.isRead) {
-                Badge(
-                    modifier = Modifier.padding(end = 8.dp),
-                    containerColor = MaterialTheme.colorScheme.primary
-                ) {}
-            }
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = notification.title,
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF09090B) // Set text color to #09090B
+                        color = if (!notification.isRead) {
+                            Color.White // Warna teks putih untuk notifikasi belum dibaca
+                        } else {
+                            Color(0xFF09090B) // Warna teks hitam untuk notifikasi yang sudah dibaca
+                        }
                     )
                 )
 
@@ -183,7 +186,12 @@ fun NotificationCard(
                     text = notification.message,
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.Normal,
-                        color = Color(0xFF09090B))
+                        color = if (!notification.isRead) {
+                            Color.White // Warna teks putih untuk notifikasi belum dibaca
+                        } else {
+                            Color(0xFF09090B) // Warna teks hitam untuk notifikasi yang sudah dibaca
+                        }
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -191,7 +199,11 @@ fun NotificationCard(
                 Text(
                     text = formattedDate,
                     style = MaterialTheme.typography.bodySmall.copy(
-                        color = MaterialTheme.colorScheme.outline
+                        color = if (!notification.isRead) {
+                            Color.White.copy(alpha = 0.7f) // Warna teks putih dengan transparansi untuk notifikasi belum dibaca
+                        } else {
+                            MaterialTheme.colorScheme.outline // Warna teks default untuk notifikasi yang sudah dibaca
+                        }
                     )
                 )
             }
@@ -200,7 +212,11 @@ fun NotificationCard(
                 Icon(
                     Icons.Outlined.Delete,
                     contentDescription = "Delete",
-                    tint = MaterialTheme.colorScheme.error
+                    tint = if (!notification.isRead) {
+                        Color.White // Warna ikon putih untuk notifikasi belum dibaca
+                    } else {
+                        MaterialTheme.colorScheme.error // Warna ikon default untuk notifikasi yang sudah dibaca
+                    }
                 )
             }
         }
