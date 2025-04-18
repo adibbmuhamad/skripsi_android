@@ -1,8 +1,10 @@
 package com.example.projectskripsi.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Notifications
@@ -11,7 +13,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,6 +26,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.projectskripsi.ui.theme.ProjectSkripsiTheme
 import java.text.SimpleDateFormat
 import java.util.*
+import com.example.projectskripsi.ui.component.CustomAppBar
+
 
 data class NotificationItem(
     val id: String,
@@ -44,36 +51,45 @@ fun NotificationPage(
         notificationViewModel.loadNotifications()
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Notifications") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                actions = {
-                    if (notifications.isNotEmpty()) {
-                        IconButton(onClick = { notificationViewModel.clearAllNotifications() }) {
-                            Icon(Icons.Outlined.Delete, contentDescription = "Clear All")
-                        }
-                    }
-                }
-            )
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color(0xFFF9FAFB)) // Warna latar belakang yang sama
+    ) {
+        // Top Bar
+        Surface(
+            shadowElevation = 4.dp,
+            color = Color(0xFFFFFFFF) // Set background color to white
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Notifikasi",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF09090B) // Set text color to #09090B
+                    )
+                )
+            }
         }
-    ) { paddingValues ->
+
+        // Content
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(top = 8.dp) // Add padding to separate from top bar
         ) {
             if (notifications.isEmpty()) {
                 EmptyNotifications(modifier = Modifier.align(Alignment.Center))
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(vertical = 8.dp)
+                    contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp)
                 ) {
                     items(notifications) { notification ->
                         NotificationCard(
@@ -106,12 +122,11 @@ fun NotificationCard(
         onClick = onNotificationClick,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp),
+            .padding(vertical = 8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (!notification.isRead)
-                MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f)
-            else
-                MaterialTheme.colorScheme.surfaceVariant
+            containerColor = Color.White
         )
     ) {
         Row(
@@ -130,29 +145,28 @@ fun NotificationCard(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = notification.title,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = if (!notification.isRead)
-                        MaterialTheme.colorScheme.onSurface
-                    else
-                        MaterialTheme.colorScheme.onSurfaceVariant
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF09090B) // Set text color to #09090B
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
                     text = notification.message,
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.Normal,
+                        color = Color(0xFF09090B))
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
                     text = formattedDate,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.outline
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        color = MaterialTheme.colorScheme.outline
+                    )
                 )
             }
 
@@ -184,17 +198,19 @@ fun EmptyNotifications(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "No notifications yet",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            text = "Tidak ada notifikasi",
+            style = MaterialTheme.typography.titleMedium.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "All your notifications will appear here",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+            text = "Semua notifikasi Anda akan muncul di sini",
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+            )
         )
     }
 }
