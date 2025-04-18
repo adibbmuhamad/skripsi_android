@@ -78,6 +78,32 @@ fun NotificationPage(
             }
         }
 
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp, horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Terbaru",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            )
+            TextButton(onClick = {
+                notificationViewModel.markAllAsRead()
+            }) {
+                Text(
+                    text = "Tandai telah dibaca",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                )
+            }
+        }
+
         // Content
         Box(
             modifier = Modifier

@@ -22,7 +22,7 @@ class NotificationViewModel : ViewModel() {
     fun loadNotifications() {
         viewModelScope.launch {
             try {
-                val userId = auth.currentUser?.uid ?: return@launch
+                val userId = auth.currentUser ?.uid ?: return@launch
 
                 firestore.collection("users")
                     .document(userId)
@@ -56,7 +56,7 @@ class NotificationViewModel : ViewModel() {
     fun markAsRead(notificationId: String) {
         viewModelScope.launch {
             try {
-                val userId = auth.currentUser?.uid ?: return@launch
+                val userId = auth.currentUser ?.uid ?: return@launch
 
                 firestore.collection("users")
                     .document(userId)
@@ -75,10 +75,38 @@ class NotificationViewModel : ViewModel() {
         }
     }
 
+    fun markAllAsRead() {
+        viewModelScope.launch {
+            try {
+                val userId = auth.currentUser ?.uid ?: return@launch
+
+                val notificationsRef = firestore.collection("users")
+                    .document(userId)
+                    .collection("notifications")
+
+                val documents = notificationsRef.get().await()
+                val batch = firestore.batch()
+
+                for (document in documents) {
+                    batch.update(document.reference, "isRead", true)
+                }
+
+                batch.commit().await()
+
+                // Update state lokal
+                _notifications.value = _notifications.value.map {
+                    it.copy(isRead = true)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error marking all notifications as read", e)
+            }
+        }
+    }
+
     fun deleteNotification(notificationId: String) {
         viewModelScope.launch {
             try {
-                val userId = auth.currentUser?.uid ?: return@launch
+                val userId = auth.currentUser ?.uid ?: return@launch
 
                 firestore.collection("users")
                     .document(userId)
@@ -98,10 +126,8 @@ class NotificationViewModel : ViewModel() {
     fun clearAllNotifications() {
         viewModelScope.launch {
             try {
-                val userId = auth.currentUser?.uid ?: return@launch
+                val userId = auth.currentUser ?.uid ?: return@launch
 
-                // Karena Firestore tidak mendukung delete collection,
-                // kita perlu menghapus dokumen satu per satu
                 val batch = firestore.batch()
                 val notificationsRef = firestore.collection("users")
                     .document(userId)
