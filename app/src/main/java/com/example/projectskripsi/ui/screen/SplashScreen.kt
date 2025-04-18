@@ -42,7 +42,7 @@ fun SplashScreen(navController: NavController, modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground), // Ganti dengan logo Anda
+                painter = painterResource(id = R.drawable.logosmpimiatrans), // Ganti dengan logo Anda
                 contentDescription = "Logo",
                 modifier = Modifier.size(100.dp)
             )
