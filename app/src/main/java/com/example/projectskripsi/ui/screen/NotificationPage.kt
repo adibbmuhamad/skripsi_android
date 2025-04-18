@@ -138,7 +138,7 @@ fun NotificationPage(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp)
                 ) {
-                    items(notifications) { notification ->
+                    items(notifications, key = { it.id }) { notification ->
                         NotificationCard(
                             notification = notification,
                             onNotificationClick = {
