@@ -104,4 +104,6 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging:24.1.1")
     implementation("com.google.firebase:firebase-firestore")
 
+    implementation("androidx.compose.foundation:foundation:1.5.0")
+
 }

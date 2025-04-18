@@ -1,23 +1,44 @@
 package com.example.projectskripsi.ui.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.rememberDismissState
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -25,8 +46,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.projectskripsi.ui.theme.ProjectSkripsiTheme
 import java.text.SimpleDateFormat
-import java.util.*
-import com.example.projectskripsi.ui.component.CustomAppBar
+import java.util.Date
+import java.util.Locale
 
 
 data class NotificationItem(
@@ -134,93 +155,106 @@ fun NotificationPage(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NotificationCard(
     notification: NotificationItem,
     onNotificationClick: () -> Unit,
     onDeleteClick: () -> Unit
 ) {
-    val dateFormatter = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
-    val formattedDate = dateFormatter.format(Date(notification.timestamp))
-
-    Card(
-        onClick = onNotificationClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            // Ubah warna latar belakang berdasarkan status isRead
-            containerColor = if (!notification.isRead) {
-                Color(0xFF2196F3) // Warna biru untuk notifikasi belum dibaca
-            } else {
-                Color.White // Warna putih untuk notifikasi yang sudah dibaca
+    val dismissState = rememberDismissState(
+        confirmStateChange = {
+            if (it == DismissValue.DismissedToStart) {
+                onDeleteClick()
             }
-        )
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+            true
+        }
+    )
 
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = notification.title,
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = if (!notification.isRead) {
-                            Color.White // Warna teks putih untuk notifikasi belum dibaca
-                        } else {
-                            Color(0xFF09090B) // Warna teks hitam untuk notifikasi yang sudah dibaca
-                        }
-                    )
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Text(
-                    text = notification.message,
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontWeight = FontWeight.Normal,
-                        color = if (!notification.isRead) {
-                            Color.White // Warna teks putih untuk notifikasi belum dibaca
-                        } else {
-                            Color(0xFF09090B) // Warna teks hitam untuk notifikasi yang sudah dibaca
-                        }
-                    )
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Text(
-                    text = formattedDate,
-                    style = MaterialTheme.typography.bodySmall.copy(
-                        color = if (!notification.isRead) {
-                            Color.White.copy(alpha = 0.7f) // Warna teks putih dengan transparansi untuk notifikasi belum dibaca
-                        } else {
-                            MaterialTheme.colorScheme.outline // Warna teks default untuk notifikasi yang sudah dibaca
-                        }
-                    )
-                )
-            }
-
-            IconButton(onClick = onDeleteClick) {
+    SwipeToDismiss(
+        state = dismissState,
+        directions = setOf(DismissDirection.EndToStart),
+        background = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp),
+                contentAlignment = Alignment.CenterEnd
+            ) {
                 Icon(
-                    Icons.Outlined.Delete,
+                    Icons.Default.Delete,
                     contentDescription = "Delete",
-                    tint = if (!notification.isRead) {
-                        Color.White // Warna ikon putih untuk notifikasi belum dibaca
+                    tint = Color.Red,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        },
+        dismissContent = {
+            Card(
+                onClick = onNotificationClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (!notification.isRead) {
+                        Color(0xFF2196F3) // Warna biru untuk notifikasi belum dibaca
                     } else {
-                        MaterialTheme.colorScheme.error // Warna ikon default untuk notifikasi yang sudah dibaca
+                        Color.White // Warna putih untuk notifikasi yang sudah dibaca
                     }
                 )
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = notification.title,
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = if (!notification.isRead) {
+                                    Color.White // Warna teks putih untuk notifikasi belum dibaca
+                                } else {
+                                    Color(0xFF09090B) // Warna teks hitam untuk notifikasi yang sudah dibaca
+                                }
+                            )
+                        )
+
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        Text(
+                            text = notification.message,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.Normal,
+                                color = if (!notification.isRead) {
+                                    Color.White // Warna teks putih untuk notifikasi belum dibaca
+                                } else {
+                                    Color(0xFF09090B) // Warna teks hitam untuk notifikasi yang sudah dibaca
+                                }
+                            )
+                        )
+
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        Text(
+                            text = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault()).format(Date(notification.timestamp)),
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                color = if (!notification.isRead) {
+                                    Color.White.copy(alpha = 0.7f) // Warna teks putih dengan transparansi untuk notifikasi belum dibaca
+                                } else {
+                                    MaterialTheme.colorScheme.outline // Warna teks default untuk notifikasi yang sudah dibaca
+                                }
+                            )
+                        )
+                    }
+                }
             }
         }
-    }
+    )
 }
 
 @Composable
