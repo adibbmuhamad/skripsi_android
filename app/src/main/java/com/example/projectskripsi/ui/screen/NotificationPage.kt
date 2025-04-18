@@ -199,9 +199,9 @@ fun NotificationCard(
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = if (!notification.isRead) {
-                        Color(0xFF2196F3) // Warna biru untuk notifikasi belum dibaca
+                        Color(0xFFE6ECF8) // Warna latar belakang untuk notifikasi belum dibaca
                     } else {
-                        Color.White // Warna putih untuk notifikasi yang sudah dibaca
+                        Color.White // Warna latar belakang untuk notifikasi yang sudah dibaca
                     }
                 )
             ) {
@@ -217,7 +217,7 @@ fun NotificationCard(
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = if (!notification.isRead) {
-                                    Color.White // Warna teks putih untuk notifikasi belum dibaca
+                                    Color(0xFF09090B) // Warna teks hitam untuk notifikasi belum dibaca
                                 } else {
                                     Color(0xFF09090B) // Warna teks hitam untuk notifikasi yang sudah dibaca
                                 }
@@ -231,7 +231,7 @@ fun NotificationCard(
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontWeight = FontWeight.Normal,
                                 color = if (!notification.isRead) {
-                                    Color.White // Warna teks putih untuk notifikasi belum dibaca
+                                    Color(0xFF09090B) // Warna teks hitam untuk notifikasi belum dibaca
                                 } else {
                                     Color(0xFF09090B) // Warna teks hitam untuk notifikasi yang sudah dibaca
                                 }
@@ -244,7 +244,7 @@ fun NotificationCard(
                             text = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault()).format(Date(notification.timestamp)),
                             style = MaterialTheme.typography.bodySmall.copy(
                                 color = if (!notification.isRead) {
-                                    Color.White.copy(alpha = 0.7f) // Warna teks putih dengan transparansi untuk notifikasi belum dibaca
+                                    MaterialTheme.colorScheme.outline // Warna teks default untuk notifikasi belum dibaca
                                 } else {
                                     MaterialTheme.colorScheme.outline // Warna teks default untuk notifikasi yang sudah dibaca
                                 }
