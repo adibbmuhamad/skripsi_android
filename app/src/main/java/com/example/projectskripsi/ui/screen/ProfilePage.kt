@@ -10,10 +10,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,8 +20,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -30,6 +31,9 @@ import coil.request.ImageRequest
 @Composable
 fun ProfilePage(navController: NavController, modifier: Modifier = Modifier, authViewModel: AuthViewModel) {
     val user by authViewModel.user.collectAsState()
+
+    // State untuk menampilkan dialog konfirmasi
+    var showLogoutDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -157,13 +161,13 @@ fun ProfilePage(navController: NavController, modifier: Modifier = Modifier, aut
 
             // Logout button
             Button(
-                onClick = { authViewModel.signOut() },
+                onClick = { showLogoutDialog = true },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = Color.White
                 )
             ) {
                 Icon(
@@ -174,6 +178,37 @@ fun ProfilePage(navController: NavController, modifier: Modifier = Modifier, aut
                 Text("Keluar", fontWeight = FontWeight.Medium)
             }
         }
+    }
+
+    // Dialog Konfirmasi Log Out
+    if (showLogoutDialog) {
+        AlertDialog(
+            containerColor = Color(0xFFE6ECF8),
+            onDismissRequest = { showLogoutDialog = false },
+            title = {
+                Text(text = "Konfirmasi Log Out")
+            },
+            text = {
+                Text(text = "Apakah Anda yakin ingin keluar dari akun ini?")
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        authViewModel.signOut()
+                        showLogoutDialog = false
+                    }
+                ) {
+                    Text("Ya")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showLogoutDialog = false }
+                ) {
+                    Text("Tidak")
+                }
+            }
+        )
     }
 }
 
