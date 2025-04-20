@@ -104,9 +104,9 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging:24.1.1")
     implementation("com.google.firebase:firebase-firestore")
 
-    implementation("androidx.compose.foundation:foundation:1.5.0")
-
     //tinggi navigasi dinamis
     implementation("com.google.accompanist:accompanist-insets:0.30.1")
 
+    //HorizontalPager
+    implementation("androidx.compose.foundation:foundation:1.6.0")
 }

@@ -30,16 +30,13 @@ import com.example.projectskripsi.ui.screen.LoginPage
 import com.example.projectskripsi.ui.screen.MainPage
 import com.example.projectskripsi.ui.screen.NotificationNavigationViewModel
 import com.example.projectskripsi.ui.screen.NotificationPage
-import com.example.projectskripsi.ui.screen.OnBoarding1Page
-import com.example.projectskripsi.ui.screen.OnBoarding2Page
-import com.example.projectskripsi.ui.screen.OnBoarding3Page
+import com.example.projectskripsi.ui.screen.OnboardingScreen
 import com.example.projectskripsi.ui.screen.ProfilePage
 import com.example.projectskripsi.ui.screen.SplashScreen
 import com.example.projectskripsi.ui.screen.StudentDetailPage
 import com.example.projectskripsi.ui.screen.StudentListPage
 import com.example.projectskripsi.ui.screen.StudentViewModel
 import com.example.projectskripsi.ui.screen.ViolationPage
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,16 +93,8 @@ fun AppNavigation(
                 SplashScreen(navController = navController)
             }
 
-            composable("onboarding1_screen") {
-                OnBoarding1Page(navController = navController, modifier = Modifier.fillMaxSize())
-            }
-
-            composable("onboarding2_screen") {
-                OnBoarding2Page(navController = navController, modifier = Modifier.fillMaxSize())
-            }
-
-            composable("onboarding3_screen") {
-                OnBoarding3Page(navController = navController, modifier = Modifier.fillMaxSize())
+            composable("onboarding_screen") {
+                OnboardingScreen(navController = navController, modifier = Modifier.fillMaxSize())
             }
 
             composable("profile_page"){

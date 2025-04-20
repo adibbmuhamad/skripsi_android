@@ -25,7 +25,7 @@ fun SplashScreen(navController: NavController, modifier: Modifier = Modifier) {
     // Menggunakan LaunchedEffect untuk menunda navigasi
     LaunchedEffect(Unit) {
         delay(3000) // Menunda selama 3 detik
-        navController.navigate("onboarding1_screen") {
+        navController.navigate("onboarding_screen") {
             // Menghapus splash screen dari back stack
             popUpTo("splash_screen") { inclusive = true }
         }
