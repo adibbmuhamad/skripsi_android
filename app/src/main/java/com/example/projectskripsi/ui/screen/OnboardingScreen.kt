@@ -332,54 +332,50 @@ fun ThirdOnboardingPage(modifier: Modifier = Modifier) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        // Blue background shape with diagonal cut
-        Box(
+        // Background shape dari drawable
+        Image(
+            painter = painterResource(id = R.drawable.shape_onboarding3), // Ganti dengan shape yang sesuai
+            contentDescription = "Background Shape",
             modifier = Modifier
                 .fillMaxWidth()
-                .height(400.dp)
-                .background(
-                    color = Color(0xFF4285F4),
-                    shape = androidx.compose.foundation.shape.GenericShape { size, _ ->
-                        moveTo(0f, 0f)
-                        lineTo(size.width, 0f)
-                        lineTo(size.width, size.height)
-                        lineTo(0f, size.height * 0.5f)
-                        close()
-                    }
-                )
+                .height(394.dp)
+                .align(Alignment.TopCenter)
+                .zIndex(0f), // Shape di belakang teks
+            contentScale = ContentScale.FillBounds
+        )
+
+        // Onboarding Title and Subtitle
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopCenter) // Posisikan di bagian atas tengah
+                .padding(top = 80.dp, start = 20.dp, end = 20.dp) // Sesuaikan padding
+                .zIndex(1f), // Teks di atas shape
+            horizontalAlignment = Alignment.End
         ) {
-            // Onboarding Title and Subtitle
-            Column(
+            Text(
+                text = "Semua Aktivitas Anak, Dalam Genggaman Anda",
+                color = Color.White,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.End,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
+            Text(
+                text = "Ingkasan harian sekolah anak Anda, lengkap dan mudah diakses.",
+                color = Color.White,
+                fontSize = 16.sp,
+                textAlign = TextAlign.End
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Box(
                 modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(start = 20.dp, end = 20.dp, top = 80.dp),
-                horizontalAlignment = Alignment.End
-            ) {
-                Text(
-                    text = "Semua Aktivitas Anak, Dalam Genggaman Anda",
-                    color = Color.White,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.End,
-                    modifier = Modifier.padding(bottom = 12.dp)
-                )
-
-                Text(
-                    text = "Ingkasan harian sekolah anak Anda, lengkap dan mudah diakses.",
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    textAlign = TextAlign.End
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Box(
-                    modifier = Modifier
-                        .width(240.dp)
-                        .height(1.dp)
-                        .background(Color.White.copy(alpha = 0.5f))
-                )
-            }
+                    .width(240.dp)
+                    .height(1.dp)
+                    .background(Color.White.copy(alpha = 0.5f))
+            )
         }
 
         // Illustration
@@ -389,16 +385,18 @@ fun ThirdOnboardingPage(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .align(Alignment.Center)
                 .padding(top = 120.dp)
-                .size(300.dp),
+                .size(300.dp)
+                .zIndex(1f), // Gambar di atas shape
             contentScale = ContentScale.Fit
         )
 
-        // Bottom content with call to action
-        Box(
+        // Bottom content
+        Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 150.dp),
-            contentAlignment = Alignment.Center
+                .padding(bottom = 150.dp)
+                .zIndex(1f), // Teks di atas shape
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "Yuk mulai sekarang dan dukung perubahan positif!",
@@ -406,7 +404,7 @@ fun ThirdOnboardingPage(modifier: Modifier = Modifier) {
                 fontWeight = FontWeight.Medium,
                 color = Color.DarkGray,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 32.dp)
+                modifier = Modifier.padding(horizontal = 32.dp, vertical = 8.dp)
             )
         }
     }
