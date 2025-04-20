@@ -392,7 +392,7 @@ fun ThirdOnboardingPage(modifier: Modifier = Modifier) {
 
         // Illustration
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background),
+            painter = painterResource(id = R.drawable.ass_onboarding3),
             contentDescription = "Classroom Illustration",
             modifier = Modifier
                 .align(Alignment.Center)
