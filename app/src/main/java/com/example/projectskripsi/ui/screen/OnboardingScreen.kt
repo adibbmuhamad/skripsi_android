@@ -361,14 +361,14 @@ fun ThirdOnboardingPage(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(start = 20.dp, end = 20.dp, top = 80.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.End
             ) {
                 Text(
                     text = "Semua Aktivitas Anak, Dalam Genggaman Anda",
                     color = Color.White,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
+                    textAlign = TextAlign.End,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
 
@@ -376,7 +376,7 @@ fun ThirdOnboardingPage(modifier: Modifier = Modifier) {
                     text = "Ingkasan harian sekolah anak Anda, lengkap dan mudah diakses.",
                     color = Color.White,
                     fontSize = 16.sp,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.End
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
