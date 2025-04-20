@@ -15,9 +15,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -79,7 +82,7 @@ fun OnboardingScreen(
             }
         }
 
-        // Navigation buttons
+// Navigation buttons
         Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -88,15 +91,24 @@ fun OnboardingScreen(
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp), // Tambahkan padding horizontal untuk ruang di sisi
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Tombol "Lewati"
                 if (pagerState.currentPage < totalPages - 1) {
                     Text(
                         text = "Lewati",
                         color = Color.Gray,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
                         modifier = Modifier
-                            .padding(start = 20.dp)
+                            .background(
+                                color = Color.LightGray.copy(alpha = 0.2f), // Background abu-abu transparan
+                                shape = CircleShape
+                            )
+                            .padding(horizontal = 16.dp, vertical = 8.dp) // Padding untuk membuatnya seperti tombol
                             .clickable {
                                 Log.d("OnboardingScreen", "Skip button clicked")
                                 coroutineScope.launch {
@@ -106,11 +118,21 @@ fun OnboardingScreen(
                     )
                 }
 
+                // Spacer untuk mengisi ruang antara tombol "Lewati" dan "Lanjut/Mulai"
+                Spacer(modifier = Modifier.weight(1f))
+
+                // Tombol "Lanjut" atau "Mulai"
                 Text(
                     text = if (pagerState.currentPage < totalPages - 1) "Lanjut" else "Mulai",
                     color = Color(0xFF4285F4),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
                     modifier = Modifier
-                        .padding(end = 20.dp)
+                        .background(
+                            color = Color .LightGray.copy(alpha = 0.2f), // Background abu-abu transparan
+                            shape = CircleShape
+                        )
+                        .padding(horizontal = 16.dp, vertical = 8.dp) // Padding untuk membuatnya seperti tombol
                         .clickable {
                             Log.d("OnboardingScreen", "Next/Finish button clicked")
                             if (pagerState.currentPage < totalPages - 1) {
@@ -200,7 +222,7 @@ fun FirstOnboardingPage(modifier: Modifier = Modifier) {
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 80.dp),
+                .padding(bottom = 150.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -295,7 +317,7 @@ fun SecondOnboardingPage(modifier: Modifier = Modifier) {
         Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 80.dp),
+                .padding(bottom = 150.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -383,7 +405,7 @@ fun ThirdOnboardingPage(modifier: Modifier = Modifier) {
         Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 80.dp),
+                .padding(bottom = 150.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
