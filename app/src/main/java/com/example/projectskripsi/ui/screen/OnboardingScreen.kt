@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -177,15 +178,16 @@ fun FirstOnboardingPage(modifier: Modifier = Modifier) {
         Column(
             modifier = Modifier
                 .align(Alignment.TopStart) // Posisikan di bagian atas
-                .padding(top = 100.dp, start = 20.dp, end = 20.dp) // Sesuaikan padding
+                .padding(top = 200.dp, start = 20.dp, end = 100.dp) // Sesuaikan padding
                 .zIndex(1f), // Teks di atas shape
             horizontalAlignment = Alignment.Start
         ) {
             Text(
                 text = "Awali Perjalanan Baru Bersama OrtuConnect",
-                color = Color.White,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                ),
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
@@ -197,9 +199,12 @@ fun FirstOnboardingPage(modifier: Modifier = Modifier) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Ikuti perkembangan pendidikan anak Anda secara langsung dan aktif!",
-                color = Color.White,
-                fontSize = 16.sp
+                modifier = Modifier.padding(end = 100.dp),
+                text = "Ikuti dan dukung proses belajar anak Anda secara langsung!",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Normal,
+                    color = Color.White
+                ),
             )
         }
 
@@ -225,17 +230,20 @@ fun FirstOnboardingPage(modifier: Modifier = Modifier) {
         ) {
             Text(
                 text = "OrtuConnect",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF09090B)
+                ),
                 textAlign = TextAlign.Center
             )
 
             Text(
                 text = "Jembatan komunikasi digital antara orangtua dan sekolah",
-                fontSize = 16.sp,
-                color = Color.Gray,
                 textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Gray
+                ),
                 modifier = Modifier.padding(horizontal = 32.dp, vertical = 8.dp)
             )
         }
@@ -266,15 +274,16 @@ fun SecondOnboardingPage(modifier: Modifier = Modifier) {
         Column(
             modifier = Modifier
                 .align(Alignment.TopStart) // Posisikan di bagian atas
-                .padding(top = 100.dp, start = 20.dp, end = 20.dp) // Sesuaikan padding
+                .padding(top = 200.dp, start = 20.dp, end = 20.dp) // Sesuaikan padding
                 .zIndex(1f), // Teks di atas shape
             horizontalAlignment = Alignment.Start
         ) {
             Text(
                 text = "Pantau Perkembangan Siswa Secara Real-Time",
-                color = Color.Black,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                ),
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
@@ -287,8 +296,10 @@ fun SecondOnboardingPage(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "Dari absensi hingga prestasi, semuanya bisa Anda akses kapan saja, di mana saja.",
-                color = Color.Black,
-                fontSize = 16.sp
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Black
+                ),
             )
         }
 
@@ -314,10 +325,11 @@ fun SecondOnboardingPage(modifier: Modifier = Modifier) {
         ) {
             Text(
                 text = "Lihat betapa mudahnya mengawasi pendidikan anak Anda!",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color.DarkGray,
                 textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Gray
+                ),
                 modifier = Modifier.padding(horizontal = 32.dp, vertical = 8.dp)
             )
         }
@@ -348,23 +360,26 @@ fun ThirdOnboardingPage(modifier: Modifier = Modifier) {
         Column(
             modifier = Modifier
                 .align(Alignment.TopCenter) // Posisikan di bagian atas tengah
-                .padding(top = 80.dp, start = 20.dp, end = 20.dp) // Sesuaikan padding
+                .padding(top = 200.dp, start = 100.dp, end = 20.dp) // Sesuaikan padding
                 .zIndex(1f), // Teks di atas shape
             horizontalAlignment = Alignment.End
         ) {
             Text(
                 text = "Semua Aktivitas Anak, Dalam Genggaman Anda",
-                color = Color.White,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                ),
                 textAlign = TextAlign.End,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
             Text(
                 text = "Ingkasan harian sekolah anak Anda, lengkap dan mudah diakses.",
-                color = Color.White,
-                fontSize = 16.sp,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Normal,
+                    color = Color.White
+                ),
                 textAlign = TextAlign.End
             )
 
@@ -400,10 +415,11 @@ fun ThirdOnboardingPage(modifier: Modifier = Modifier) {
         ) {
             Text(
                 text = "Yuk mulai sekarang dan dukung perubahan positif!",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color.DarkGray,
                 textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Gray
+                ),
                 modifier = Modifier.padding(horizontal = 32.dp, vertical = 8.dp)
             )
         }
