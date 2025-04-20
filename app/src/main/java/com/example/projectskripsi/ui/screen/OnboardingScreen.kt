@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.example.projectskripsi.R
 import kotlinx.coroutines.launch
@@ -160,51 +161,46 @@ fun FirstOnboardingPage(modifier: Modifier = Modifier) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        // Blue background shape
-        Box(
+        // Background shape dari drawable
+        Image(
+            painter = painterResource(id = R.drawable.shape_onboarding1),
+            contentDescription = "Background Shape",
             modifier = Modifier
                 .fillMaxWidth()
                 .height(360.dp)
-                .background(
-                    color = Color(0xFF4285F4),
-                    shape = androidx.compose.foundation.shape.GenericShape { size, _ ->
-                        moveTo(0f, 0f)
-                        lineTo(size.width, 0f)
-                        lineTo(size.width, size.height * 0.7f)
-                        lineTo(0f, size.height)
-                        close()
-                    }
-                )
+                .align(Alignment.TopCenter)
+                .zIndex(0f), // Shape di belakang teks
+            contentScale = ContentScale.FillBounds
+        )
+
+        // Onboarding Title and Subtitle
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopStart) // Posisikan di bagian atas
+                .padding(top = 100.dp, start = 20.dp, end = 20.dp) // Sesuaikan padding
+                .zIndex(1f), // Teks di atas shape
+            horizontalAlignment = Alignment.Start
         ) {
-            // Onboarding Title and Subtitle
-            Column(
+            Text(
+                text = "Awali Perjalanan Baru Bersama OrtuConnect",
+                color = Color.White,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
+            Box(
                 modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .padding(start = 20.dp, end = 20.dp)
-            ) {
-                Text(
-                    text = "Awali Perjalanan Baru Bersama OrtuConnect",
-                    color = Color.White,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 12.dp)
-                )
-
-                Text(
-                    text = "Ikuti perkembangan pendidikan anak Anda secara langsung dan aktif!",
-                    color = Color.White,
-                    fontSize = 16.sp
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Box(
-                    modifier = Modifier
-                        .width(240.dp)
-                        .height(1.dp)
-                        .background(Color.White.copy(alpha = 0.5f))
-                )
-            }
+                    .width(240.dp)
+                    .height(1.dp)
+                    .background(Color.White.copy(alpha = 0.5f))
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Ikuti perkembangan pendidikan anak Anda secara langsung dan aktif!",
+                color = Color.White,
+                fontSize = 16.sp
+            )
         }
 
         // Illustration
@@ -214,7 +210,8 @@ fun FirstOnboardingPage(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .align(Alignment.Center)
                 .padding(top = 100.dp)
-                .size(300.dp),
+                .size(300.dp)
+                .zIndex(1f), // Gambar di atas shape
             contentScale = ContentScale.Fit
         )
 
@@ -222,7 +219,8 @@ fun FirstOnboardingPage(modifier: Modifier = Modifier) {
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 150.dp),
+                .padding(bottom = 150.dp)
+                .zIndex(1f), // Teks di atas shape
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -252,54 +250,46 @@ fun SecondOnboardingPage(modifier: Modifier = Modifier) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        // Blue background shape
-        Box(
+        // Background shape dari drawable
+        Image(
+            painter = painterResource(id = R.drawable.shape_onboarding2), // Ganti dengan shape yang sesuai
+            contentDescription = "Background Shape",
             modifier = Modifier
                 .fillMaxWidth()
-                .height(360.dp)
-                .background(
-                    color = Color(0xFF4285F4),
-                    shape = androidx.compose.foundation.shape.GenericShape { size, _ ->
-                        moveTo(0f, 0f)
-                        lineTo(size.width, 0f)
-                        lineTo(size.width, size.height * 0.8f)
-                        quadraticBezierTo(
-                            size.width / 2, size.height * 1.2f,
-                            0f, size.height * 0.8f
-                        )
-                        close()
-                    }
-                )
+                .height(207.dp)
+                .align(Alignment.TopCenter)
+                .zIndex(0f), // Shape di belakang teks
+            contentScale = ContentScale.FillBounds
+        )
+
+        // Onboarding Title and Subtitle
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopStart) // Posisikan di bagian atas
+                .padding(top = 100.dp, start = 20.dp, end = 20.dp) // Sesuaikan padding
+                .zIndex(1f), // Teks di atas shape
+            horizontalAlignment = Alignment.Start
         ) {
-            // Onboarding Title and Subtitle
-            Column(
+            Text(
+                text = "Pantau Perkembangan Siswa Secara Real-Time",
+                color = Color.Black,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
+            Box(
                 modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .padding(start = 20.dp, end = 20.dp)
-            ) {
-                Text(
-                    text = "Pantau Perkembangan Siswa Secara Real-Time",
-                    color = Color.White,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 12.dp)
-                )
-
-                Text(
-                    text = "Dari absensi hingga prestasi, semuanya bisa Anda akses kapan saja, di mana saja.",
-                    color = Color.White,
-                    fontSize = 16.sp
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Box(
-                    modifier = Modifier
-                        .width(240.dp)
-                        .height(1.dp)
-                        .background(Color.White.copy(alpha = 0.5f))
-                )
-            }
+                    .width(240.dp)
+                    .height(1.dp)
+                    .background(Color.Black.copy(alpha = 0.5f))
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Dari absensi hingga prestasi, semuanya bisa Anda akses kapan saja, di mana saja.",
+                color = Color.Black,
+                fontSize = 16.sp
+            )
         }
 
         // Illustration
@@ -309,16 +299,18 @@ fun SecondOnboardingPage(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .align(Alignment.Center)
                 .padding(top = 100.dp)
-                .size(300.dp),
+                .size(300.dp)
+                .zIndex(1f), // Gambar di atas shape
             contentScale = ContentScale.Fit
         )
 
         // Bottom content
-        Box(
+        Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 150.dp),
-            contentAlignment = Alignment.Center
+                .padding(bottom = 150.dp)
+                .zIndex(1f), // Teks di atas shape
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "Lihat betapa mudahnya mengawasi pendidikan anak Anda!",
@@ -326,7 +318,7 @@ fun SecondOnboardingPage(modifier: Modifier = Modifier) {
                 fontWeight = FontWeight.Medium,
                 color = Color.DarkGray,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 32.dp)
+                modifier = Modifier.padding(horizontal = 32.dp, vertical = 8.dp)
             )
         }
     }
