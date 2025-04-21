@@ -51,7 +51,7 @@ fun SplashScreen(navController: NavController, modifier: Modifier = Modifier) {
             Text(
                 text = "Ortu Connect",
                 style = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Medium,
                     color = Color.White
                 ),
             )
