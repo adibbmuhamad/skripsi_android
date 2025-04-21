@@ -231,7 +231,7 @@ fun FirstOnboardingPage(modifier: Modifier = Modifier) {
             Text(
                 text = "OrtuConnect",
                 style = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.SemiBold,
                     color = Color(0xFF09090B)
                 ),
                 textAlign = TextAlign.Center
