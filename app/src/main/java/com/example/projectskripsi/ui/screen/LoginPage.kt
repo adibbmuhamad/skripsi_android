@@ -43,7 +43,7 @@ fun LoginPage(
     ) {
         // App Logo/Icon
         Image(
-            painter = painterResource(id = R.drawable.ic_heart), // Ganti dengan resource icon aplikasi Anda
+            painter = painterResource(id = R.drawable.logosmpimiatrans), // Ganti dengan resource icon aplikasi Anda
             contentDescription = "App Logo",
             modifier = Modifier
                 .size(120.dp)
@@ -90,30 +90,6 @@ fun LoginPage(
             onClick = onGoogleSignInClicked
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Optional: Email/Password Sign In
-        OutlinedButton(
-            onClick = { /* Handle email sign in */ },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Email,
-                    contentDescription = "Email Icon",
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Masuk dengan Email")
-            }
-        }
-
         Spacer(modifier = Modifier.height(24.dp))
 
         // Privacy Policy/Terms
@@ -148,7 +124,7 @@ fun GoogleSignInButton(onClick: () -> Unit) {
             // Menggunakan icon Google dari Material Icons
             // Karena tidak ada icon Google bawaan di Material Icons, kita tetap menggunakan custom icon
             Icon(
-                painter = painterResource(id = R.drawable.ic_academic),
+                painter = painterResource(id = R.drawable.ic_google),
                 contentDescription = "Google Icon",
                 tint = Color.Unspecified,
                 modifier = Modifier.size(24.dp)
