@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "682602984076-3oiulvb9hls1p9d0jidcg9vctrvmtvl4.apps.googleusercontent.com",
+          "client_id": "682602984076-97kvfqoop2krcfrv2dc7b68jei2oeqe9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.projectskripsi",
-            "certificate_hash": "a07203cac4a089aba4f5a69368152fe1e78f417b"
+            "certificate_hash": "75132f3f163755c2e6b8f7fd6da632e370464be5"
           }
         },
         {
