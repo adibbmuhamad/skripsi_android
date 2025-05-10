@@ -29,13 +29,13 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun ProjectSkripsiTheme(
     darkTheme: Boolean = false, // Set to false to disable dark mode
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false, // Disable dynamic color here
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            dynamicLightColorScheme(context) // Always use light dynamic color scheme
+            dynamicLightColorScheme(context) // Will not be used as dynamicColor is false
         }
         else -> LightColorScheme // Always use light color scheme
     }
