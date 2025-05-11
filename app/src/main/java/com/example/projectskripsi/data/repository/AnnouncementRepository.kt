@@ -16,8 +16,4 @@ class AnnouncementRepository {
         return RetrofitClient.apiService.getAnnouncements()
     }
 
-    // Mendapatkan detail pengumuman berdasarkan ID
-    suspend fun getAnnouncementDetail(id: Int): Response<AnnouncementDetailResponse> {
-        return RetrofitClient.apiService.getAnnouncementDetail(id)
-    }
 }

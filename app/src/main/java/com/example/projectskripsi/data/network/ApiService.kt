@@ -16,10 +16,6 @@ interface ApiService {
     @GET("api/announcements")
     suspend fun getAnnouncements(): Response<AnnouncementResponse>
 
-    // Mendapatkan detail pengumuman berdasarkan ID
-    @GET("api/announcements/{id}")
-    suspend fun getAnnouncementDetail(@Path("id") id: Int): Response<AnnouncementDetailResponse>
-
     @GET("api/students")
     suspend fun getStudents(): Response<StudentsResponse>
 
